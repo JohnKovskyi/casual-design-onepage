@@ -127,12 +127,21 @@
     @media (max-width:640px){
       .admin-panel{ width:min(92vw,360px); right:8px; top:8px; }
       .admin-toggle{ right:8px; top:8px; }
-    /* Admin panel scroll + mobile */
-.admin-panel { max-height: 90vh; overflow: auto; overscroll-behavior: contain; }
-@media (max-width: 640px){
-  .admin-panel { width: min(92vw, 360px); right: 8px; top: 8px; }
-  .admin-toggle { right: 8px; top: 8px; }
-}
+    }
+  
+    /* --- fix: make Admin panel scrollable and usable on small screens --- */
+    .admin-panel{ max-height:90vh; overflow:auto; overscroll-behavior:contain; }
+    @media (max-width:640px){
+      .admin-panel{ width:min(92vw,360px); right:8px; top:8px; }
+      .admin-toggle{ right:8px; top:8px; }
+    }
+    /* Editable text mode */
+    [data-edit][contenteditable="true"]{ outline:2px dashed #000; outline-offset:4px; background:#fffbe6; }
+    body.editing { cursor: text; }
+    .admin-section{ border-top:2px solid #000; margin-top:12px; padding-top:12px; }
+    /* Contact grid stays single column */
+    .contact-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+    @media (min-width:900px){ .contact-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -177,6 +186,16 @@
     <label>Hero Description:</label>
     <textarea id="heroDesc">Architecture & interiors that balance modern comfort with timeless character. Minimal surfaces, crafted detail, and a calm logic—without the fuss.</textarea>
 
+    <div class="admin-section">
+      <label style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="editToggle"> Enable in-page text editing
+      </label>
+      <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
+        <button type="button" onclick="saveEdits()">SAVE TEXTS</button>
+        <button type="button" onclick="clearEdits()">CLEAR TEXTS</button>
+      </div>
+    </div>
+
     <button onclick="applyChanges()">APPLY</button>
     <button onclick="resetDefaults()">RESET</button>
   </div>
@@ -199,8 +218,8 @@
     <section id="home" class="hero">
       <span class="anchor" id="a-home"></span>
       <div class="container">
-        <h1 id="heroTitleDisplay">Relaxed. Elegant. <strong>Personal.</strong></h1>
-        <p id="heroDescDisplay">Architecture & interiors that balance modern comfort with timeless character. Minimal surfaces, crafted detail, and a calm logic—without the fuss.</p>
+        <h1 id="heroTitleDisplay" data-edit>Relaxed. Elegant. <strong>Personal.</strong></h1>
+        <p id="heroDescDisplay" data-edit>Architecture & interiors that balance modern comfort with timeless character. Minimal surfaces, crafted detail, and a calm logic—without the fuss.</p>
         <div class="cta">
           <a class="btn btn-primary" href="#services">EXPLORE SERVICES</a>
           <a class="btn" href="#contact">START CONVERSATION</a>
@@ -213,9 +232,9 @@
       <span class="anchor" id="a-about"></span>
       <div class="container">
         <div class="panel">
-          <h2>About Casual Design</h2>
-          <p class="sub">A simple promise: thoughtful spaces, human scale. We combine classic sensibilities with contemporary clarity so your home feels both grounded and fresh.</p>
-          <p>With two decades of experience across hotels, residences, and complex renovations, our process is pragmatic and collaborative. We draw clean, we specify clearly, and we coordinate closely with builders. Every drawing serves a purpose—like layers in a CAD file—reducing noise and guiding decisions.</p>
+          <h2 id="aboutTitle" data-edit>About Casual Design</h2>
+          <p class="sub" id="aboutSub" data-edit>A simple promise: thoughtful spaces, human scale. We combine classic sensibilities with contemporary clarity so your home feels both grounded and fresh.</p>
+          <p id="aboutBody" data-edit>With two decades of experience across hotels, residences, and complex renovations, our process is pragmatic and collaborative. We draw clean, we specify clearly, and we coordinate closely with builders. Every drawing serves a purpose—like layers in a CAD file—reducing noise and guiding decisions.</p>
         </div>
       </div>
     </section>
@@ -224,38 +243,38 @@
     <section id="services">
       <span class="anchor" id="a-services"></span>
       <div class="container">
-        <h2>Services</h2>
-        <p class="sub">From first sketch to handover. Modular scope, clear deliverables.</p>
+        <h2 id="servicesTitle" data-edit>Services</h2>
+        <p class="sub" id="servicesSub" data-edit>From first sketch to handover. Modular scope, clear deliverables.</p>
         <div class="cards">
           <article class="card">
-            <h3>Concept & Feasibility</h3>
+            <h3 id="svc1Title" data-edit>Concept & Feasibility</h3>
             <hr class="rule"/>
-            <p>Site study, code check, massing, and mood. Early clarity on what's possible and sensible.</p>
+            <p id="svc1Body" data-edit>Site study, code check, massing, and mood. Early clarity on what's possible and sensible.</p>
           </article>
           <article class="card">
-            <h3>Design & Visualization</h3>
+            <h3 id="svc2Title" data-edit>Design & Visualization</h3>
             <hr class="rule"/>
-            <p>Plans, sections, elevations, and clean 3D to test proportion, light, and material—before you commit.</p>
+            <p id="svc2Body" data-edit>Plans, sections, elevations, and clean 3D to test proportion, light, and material—before you commit.</p>
           </article>
           <article class="card">
-            <h3>Technical & Coordination</h3>
+            <h3 id="svc3Title" data-edit>Technical & Coordination</h3>
             <hr class="rule"/>
-            <p>Detailing, specifications, and consultant coordination (MEP/structural). Drawings that builders actually use.</p>
+            <p id="svc3Body" data-edit>Detailing, specifications, and consultant coordination (MEP/structural). Drawings that builders actually use.</p>
           </article>
           <article class="card">
-            <h3>Interior Architecture</h3>
+            <h3 id="svc4Title" data-edit>Interior Architecture</h3>
             <hr class="rule"/>
-            <p>Joinery, kitchens, bathrooms, and pragmatic material palettes—durable, tactile, and calm.</p>
+            <p id="svc4Body" data-edit>Joinery, kitchens, bathrooms, and pragmatic material palettes—durable, tactile, and calm.</p>
           </article>
           <article class="card">
-            <h3>Planning & Permitting</h3>
+            <h3 id="svc5Title" data-edit>Planning & Permitting</h3>
             <hr class="rule"/>
-            <p>Submissions and responses. We speak the language of authorities to keep momentum.</p>
+            <p id="svc5Body" data-edit>Submissions and responses. We speak the language of authorities to keep momentum.</p>
           </article>
           <article class="card">
-            <h3>Site Support</h3>
+            <h3 id="svc6Title" data-edit>Site Support</h3>
             <hr class="rule"/>
-            <p>RFIs, sketches, and site visits to unblock decisions and protect design intent during construction.</p>
+            <p id="svc6Body" data-edit>RFIs, sketches, and site visits to unblock decisions and protect design intent during construction.</p>
           </article>
         </div>
       </div>
@@ -265,8 +284,8 @@
     <section id="contact">
       <span class="anchor" id="a-contact"></span>
       <div class="container">
-        <h2>Contact</h2>
-        <p class="sub">Tell us about your project. We'll reply with next steps and a simple plan.</p>
+        <h2 id="contactTitle" data-edit>Contact</h2>
+        <p class="sub" id="contactSub" data-edit><a href="mailto:info@casual-design.com">info@casual-design.com</a></p>
         <div class="contact-grid">
           <form class="panel" onsubmit="event.preventDefault(); alert('Thanks! This demo form doesn\'t send yet.');">
             <div>
@@ -283,27 +302,20 @@
             </div>
             <div style="margin-top:20px; display:flex; gap:16px; flex-wrap:wrap;">
               <button class="btn btn-primary" type="submit">SEND MESSAGE</button>
-              <a class="btn" href="mailto:hello@casual-design.com">EMAIL DIRECTLY</a>
+              <a class="btn" href="mailto:info@casual-design.com">EMAIL DIRECTLY</a>
             </div>
           </form>
-          <aside class="panel">
-            <h3>DETAILS</h3>
-            <hr class="rule"/>
-            <p><strong>Email:</strong> hello@casual-design.com<br/>
-               <strong>Locations:</strong> UK • Canada<br/>
-               <strong>Hours:</strong> By appointment</p>
-            <p>Prefer WhatsApp or Telegram? Add a link here later—this layout is ready.</p>
-          </aside>
+          
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">© <span id="year"></span> Casual Design. All rights reserved.</footer>
+  
 
   <script>
     // Current year
-    document.getElementById('year').textContent = new Date().getFullYear();
+    (function(){ const yEl = document.getElementById('year'); if(yEl){ yEl.textContent = new Date().getFullYear(); }})();
 
     // Admin Panel toggle
     function toggleAdmin(){ document.getElementById('adminPanel').classList.toggle('open'); }
@@ -405,6 +417,16 @@
     }
 
     loadSettings();
+    loadEditsData();
+
+    // Editable text helpers
+    function getEditableKeys(){ return Array.from(document.querySelectorAll('[data-edit]')).map(el => el.id).filter(Boolean); }
+    function toggleEdit(flag){ document.body.classList.toggle('editing', !!flag); document.querySelectorAll('[data-edit]').forEach(el => el.contentEditable = flag ? 'true' : 'false'); }
+    function saveEdits(){ const data = {}; getEditableKeys().forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.innerHTML; }); localStorage.setItem('casualDesignEdits', JSON.stringify(data)); alert('Texts saved.'); }
+    function clearEdits(){ localStorage.removeItem('casualDesignEdits'); alert('Saved texts cleared. Reload to reset.'); }
+    function loadEditsData(){ const raw = localStorage.getItem('casualDesignEdits'); if(!raw) return; try{ const data = JSON.parse(raw); Object.entries(data).forEach(([id, html]) => { const el = document.getElementById(id); if(el) el.innerHTML = html; }); } catch(e) { console.warn('Bad edits', e); } }
+
+    const editBox = document.getElementById('editToggle'); if(editBox){ editBox.addEventListener('change', e => toggleEdit(e.target.checked)); }
 
     // Active nav highlight
     const links = Array.from(document.querySelectorAll('[data-nav]'));
