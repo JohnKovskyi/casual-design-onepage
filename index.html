@@ -121,6 +121,18 @@
     /* Optional presets for header art */
     .horizon-urban { --header-img: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1000 120\"><rect width=\"1000\" height=\"120\" fill=\"%23f5f5f5\"/><rect y=\"80\" width=\"1000\" height=\"20\" fill=\"%23e8e8e8\"/><rect y=\"90\" width=\"1000\" height=\"30\" fill=\"%23ddd\"/></svg>'); }
     .horizon-minimal { --header-img: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1000 120\"><rect width=\"1000\" height=\"120\" fill=\"%23fafafa\"/><line x1=\"0\" y1=\"60\" x2=\"1000\" y2=\"60\" stroke=\"%23eee\" stroke-width=\"1\"/></svg>'); }
+  
+    /* --- fix: make Admin panel scrollable and usable on small screens --- */
+    .admin-panel{ max-height:90vh; overflow:auto; overscroll-behavior:contain; }
+    @media (max-width:640px){
+      .admin-panel{ width:min(92vw,360px); right:8px; top:8px; }
+      .admin-toggle{ right:8px; top:8px; }
+    /* Admin panel scroll + mobile */
+.admin-panel { max-height: 90vh; overflow: auto; overscroll-behavior: contain; }
+@media (max-width: 640px){
+  .admin-panel { width: min(92vw, 360px); right: 8px; top: 8px; }
+  .admin-toggle { right: 8px; top: 8px; }
+}
   </style>
 </head>
 <body>
