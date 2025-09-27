@@ -44,6 +44,7 @@
       background: white; border: 2px solid black; padding: 20px; border-radius: 0;
       box-shadow: var(--shadow); min-width: 320px; max-width: 360px;
       transform: translateX(calc(100% + 20px)); transition: transform 0.3s ease;
+      max-height: 90vh; overflow: auto; overscroll-behavior: contain;
     }
     .admin-panel.open { transform: translateX(0); }
     .admin-toggle { position: fixed; top: 20px; right: 20px; z-index: 2001; background: black; color: white; border: none; padding: 10px 15px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12px; }
@@ -52,6 +53,7 @@
     .admin-panel input, .admin-panel textarea, .admin-panel select { width: 100%; padding: 8px; margin-bottom: 14px; border: 2px solid black; background: white; font-family: 'Poppins', sans-serif; font-size: 12px; }
     .admin-panel .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .admin-panel button { background: black; color: white; border: none; padding: 8px 15px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12px; margin-right: 10px; }
+    .admin-section{ border-top:2px solid #000; margin-top:12px; padding-top:12px; }
 
     /* Fixed horizon header */
     .horizon-header {
@@ -105,48 +107,35 @@
     .card p { font-weight: 600; color: var(--muted); }
     .rule { height: 2px; background: black; border: 0; margin: 20px 0; }
 
-    /* Contact */
+    /* Contact (single column) */
     .contact-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
-    @media (min-width: 900px) { .contact-grid { grid-template-columns: 1.2fr 0.8fr; } }
 
     label { display: block; font-size: 14px; color: black; margin-bottom: 8px; font-weight: 700; }
     input, textarea { width: 100%; background: white; color: black; border: 2px solid black; padding: 12px; font-family: 'Poppins', sans-serif; font-weight: 600; }
     textarea { min-height: 140px; resize: vertical; }
 
-    .footer { padding: 40px 20px; color: var(--muted); border-top: 2px solid black; text-align: center; font-weight: 700; font-size: 14px; }
-
     /* Anchor offset */
     .anchor { position: relative; top: -140px; visibility: hidden; }
+
+    /* Editable text mode */
+    [data-edit][contenteditable="true"]{ outline:2px dashed #000; outline-offset:4px; background:#fffbe6; }
+    body.editing { cursor: text; }
 
     /* Optional presets for header art */
     .horizon-urban { --header-img: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1000 120\"><rect width=\"1000\" height=\"120\" fill=\"%23f5f5f5\"/><rect y=\"80\" width=\"1000\" height=\"20\" fill=\"%23e8e8e8\"/><rect y=\"90\" width=\"1000\" height=\"30\" fill=\"%23ddd\"/></svg>'); }
     .horizon-minimal { --header-img: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1000 120\"><rect width=\"1000\" height=\"120\" fill=\"%23fafafa\"/><line x1=\"0\" y1=\"60\" x2=\"1000\" y2=\"60\" stroke=\"%23eee\" stroke-width=\"1\"/></svg>'); }
-  
-    /* --- fix: make Admin panel scrollable and usable on small screens --- */
-    .admin-panel{ max-height:90vh; overflow:auto; overscroll-behavior:contain; }
+
     @media (max-width:640px){
       .admin-panel{ width:min(92vw,360px); right:8px; top:8px; }
       .admin-toggle{ right:8px; top:8px; }
     }
-  
-    /* --- fix: make Admin panel scrollable and usable on small screens --- */
-    .admin-panel{ max-height:90vh; overflow:auto; overscroll-behavior:contain; }
-    @media (max-width:640px){
-      .admin-panel{ width:min(92vw,360px); right:8px; top:8px; }
-      .admin-toggle{ right:8px; top:8px; }
-    }
-    /* Editable text mode */
-    [data-edit][contenteditable="true"]{ outline:2px dashed #000; outline-offset:4px; background:#fffbe6; }
-    body.editing { cursor: text; }
-    .admin-section{ border-top:2px solid #000; margin-top:12px; padding-top:12px; }
-    /* Contact grid stays single column */
-    .contact-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
-    @media (min-width:900px){ .contact-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
+  <!-- Admin Panel toggle -->
+  <button class="admin-toggle" onclick="openAdmin()">ADMIN</button>
+
   <!-- Admin Panel -->
-  <button class="admin-toggle" onclick="toggleAdmin()">ADMIN</button>
   <div class="admin-panel" id="adminPanel">
     <h3>ADMIN PANEL</h3>
 
@@ -180,14 +169,16 @@
       <option value="horizon-minimal">Minimal</option>
     </select>
 
-    <label>Contact Email:</label>
-    <input type="email" id="contactEmail" value="info@casual-design.com" placeholder="name@domain.com">
-
     <label>Hero Title:</label>
     <input type="text" id="heroTitle" value="Relaxed. Elegant. Personal.">
 
     <label>Hero Description:</label>
     <textarea id="heroDesc">Architecture & interiors that balance modern comfort with timeless character. Minimal surfaces, crafted detail, and a calm logic—without the fuss.</textarea>
+
+    <div class="admin-section">
+      <label>Contact Email:</label>
+      <input type="email" id="contactEmail" value="info@casual-design.com" placeholder="name@domain.com">
+    </div>
 
     <div class="admin-section">
       <label style="display:flex;align-items:center;gap:8px;">
@@ -196,11 +187,10 @@
       <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
         <button type="button" onclick="saveEdits()">SAVE TEXTS</button>
         <button type="button" onclick="clearEdits()">CLEAR TEXTS</button>
+        <button type="button" onclick="applyChanges()">APPLY</button>
+        <button type="button" onclick="resetDefaults()">RESET</button>
       </div>
     </div>
-
-    <button onclick="applyChanges()">APPLY</button>
-    <button onclick="resetDefaults()">RESET</button>
   </div>
 
   <!-- Fixed Horizon Header -->
@@ -236,8 +226,8 @@
       <div class="container">
         <div class="panel">
           <h2 id="aboutTitle" data-edit>About Casual Design</h2>
-          <p class="sub" id="aboutSub" data-edit>A simple promise: thoughtful spaces, human scale. We combine classic sensibilities with contemporary clarity so your home feels both grounded and fresh.</p>
-          <p id="aboutBody" data-edit>With two decades of experience across hotels, residences, and complex renovations, our process is pragmatic and collaborative. We draw clean, we specify clearly, and we coordinate closely with builders. Every drawing serves a purpose—like layers in a CAD file—reducing noise and guiding decisions.</p>
+          <p class="sub" id="aboutSub" data-edit>Design that feels effortless. Calm plans, honest materials, and details that stand up to daily life.</p>
+          <p id="aboutBody" data-edit>We help homeowners and developers make clear decisions—fast. Our process is simple: listen, sketch, test, refine. We coordinate clean drawings and straight answers so builders can price and build without surprises. Two decades of hospitality and residential work taught us the same lesson every time: comfort comes from proportion, light, and order. We keep those three in balance and let everything else get quieter.</p>
         </div>
       </div>
     </section>
@@ -247,37 +237,37 @@
       <span class="anchor" id="a-services"></span>
       <div class="container">
         <h2 id="servicesTitle" data-edit>Services</h2>
-        <p class="sub" id="servicesSub" data-edit>From first sketch to handover. Modular scope, clear deliverables.</p>
+        <p class="sub" id="servicesSub" data-edit>Modular scope. Fixed deliverables. Transparent fees.</p>
         <div class="cards">
           <article class="card">
             <h3 id="svc1Title" data-edit>Concept & Feasibility</h3>
             <hr class="rule"/>
-            <p id="svc1Body" data-edit>Site study, code check, massing, and mood. Early clarity on what's possible and sensible.</p>
+            <p id="svc1Body" data-edit>Briefing, code scan (UK & BC), site study, massing options, and quick order-of-magnitude budgets—so you know what’s sensible before you commit.</p>
           </article>
           <article class="card">
             <h3 id="svc2Title" data-edit>Design & Visualization</h3>
             <hr class="rule"/>
-            <p id="svc2Body" data-edit>Plans, sections, elevations, and clean 3D to test proportion, light, and material—before you commit.</p>
+            <p id="svc2Body" data-edit>Plans, sections, elevations, and clear 3D to test layouts, light, and material. Mood boards and material palettes to align taste and cost.</p>
           </article>
           <article class="card">
             <h3 id="svc3Title" data-edit>Technical & Coordination</h3>
             <hr class="rule"/>
-            <p id="svc3Body" data-edit>Detailing, specifications, and consultant coordination (MEP/structural). Drawings that builders actually use.</p>
+            <p id="svc3Body" data-edit>Buildable drawings, details, and specifications. We coordinate structural/MEP inputs and resolve clashes early so site stays smooth.</p>
           </article>
           <article class="card">
             <h3 id="svc4Title" data-edit>Interior Architecture</h3>
             <hr class="rule"/>
-            <p id="svc4Body" data-edit>Joinery, kitchens, bathrooms, and pragmatic material palettes—durable, tactile, and calm.</p>
+            <p id="svc4Body" data-edit>Kitchens, bathrooms, and bespoke joinery. Hardware, lighting, and finishes scheduled clearly—durable, tactile, calm.</p>
           </article>
           <article class="card">
             <h3 id="svc5Title" data-edit>Planning & Permitting</h3>
             <hr class="rule"/>
-            <p id="svc5Body" data-edit>Submissions and responses. We speak the language of authorities to keep momentum.</p>
+            <p id="svc5Body" data-edit>Submissions and responses with authorities. Neighbour and stakeholder packs where helpful. We keep momentum and paper tidy.</p>
           </article>
           <article class="card">
             <h3 id="svc6Title" data-edit>Site Support</h3>
             <hr class="rule"/>
-            <p id="svc6Body" data-edit>RFIs, sketches, and site visits to unblock decisions and protect design intent during construction.</p>
+            <p id="svc6Body" data-edit>RFIs answered quickly, sketches for decisions, shop-drawing reviews, and focused site visits to protect design intent.</p>
           </article>
         </div>
       </div>
@@ -308,19 +298,17 @@
               <a id="emailDirect" class="btn" href="mailto:info@casual-design.com" data-edit>EMAIL DIRECTLY</a>
             </div>
           </form>
-          
         </div>
       </div>
     </section>
   </main>
 
-  
-
+  <!-- Core site JS (layout + admin behavior) -->
   <script>
-    // Current year
+    // Current year (kept for potential future footer)
     (function(){ const yEl = document.getElementById('year'); if(yEl){ yEl.textContent = new Date().getFullYear(); }})();
 
-    // Admin Panel toggle
+    // Admin Panel toggle (opened through openAdmin for auth)
     function toggleAdmin(){ document.getElementById('adminPanel').classList.toggle('open'); }
 
     // Utility: load image to verify availability before applying
@@ -373,6 +361,10 @@
         loadImage(bgUrl).then(() => setBg(bgUrl)).catch(() => alert('Header background failed to load; keeping previous.'));
       }
 
+      // Update hero content (for immediate view)
+      document.getElementById('heroTitleDisplay').innerHTML = heroTitle;
+      document.getElementById('heroDescDisplay').innerHTML  = heroDesc;
+
       // Update contact email in both locations
       const email = (document.getElementById('contactEmail')?.value?.trim() || 'info@casual-design.com');
       const emailLink = document.getElementById('contactEmailLink');
@@ -380,12 +372,8 @@
       const emailDirect = document.getElementById('emailDirect');
       if(emailDirect){ emailDirect.href = `mailto:${email}`; }
 
-      // Update hero content
-      document.getElementById('heroTitleDisplay').innerHTML = heroTitle;
-      document.getElementById('heroDescDisplay').innerHTML  = heroDesc;
-
-      // Save to localStorage
-      const settings = { logoUrl, logoText, bgUrl, bgSize, overlay, horizonStyle, heroTitle, heroDesc, contactEmail: (document.getElementById('contactEmail')?.value?.trim() || 'info@casual-design.com') };
+      // Save to localStorage (UI settings)
+      const settings = { logoUrl, logoText, bgUrl, bgSize, overlay, horizonStyle, heroTitle, heroDesc, contactEmail: email };
       localStorage.setItem('casualDesignSettings', JSON.stringify(settings));
       alert('Changes applied.');
     }
@@ -399,15 +387,14 @@
       document.getElementById('horizonStyle').value = '';
       document.getElementById('heroTitle').value = 'Relaxed. Elegant. Personal.';
       document.getElementById('heroDesc').value = 'Architecture & interiors that balance modern comfort with timeless character. Minimal surfaces, crafted detail, and a calm logic—without the fuss.';
+      const ce = document.getElementById('contactEmail'); if(ce) ce.value = 'info@casual-design.com';
       localStorage.removeItem('casualDesignSettings');
-      // Apply defaults
       applyChanges();
     }
 
     function loadSettings(){
       const saved = localStorage.getItem('casualDesignSettings');
       if(!saved){
-        // First-load defaults: try to show logo image if reachable
         const url = document.getElementById('logoUrl').value.trim();
         if(url){ loadImage(url).then(() => applyChanges()); }
         return;
@@ -420,24 +407,24 @@
         document.getElementById('bgSize').value    = s.bgSize    || 'cover';
         document.getElementById('overlay').value   = (s.overlay ?? 1);
         document.getElementById('horizonStyle').value = s.horizonStyle || '';
-        const ce = document.getElementById('contactEmail'); if(ce) ce.value = s.contactEmail || 'info@casual-design.com';
         document.getElementById('heroTitle').value = s.heroTitle || 'Relaxed. Elegant. Personal.';
         document.getElementById('heroDesc').value  = s.heroDesc  || 'Architecture & interiors that balance modern comfort with timeless character. Minimal surfaces, crafted detail, and a calm logic—without the fuss.';
+        const ce = document.getElementById('contactEmail'); if(ce) ce.value = s.contactEmail || 'info@casual-design.com';
         applyChanges();
       } catch(e){ console.warn('Bad saved settings; clearing.', e); localStorage.removeItem('casualDesignSettings'); }
     }
 
     loadSettings();
-    loadEditsData();
 
     // Editable text helpers
     function getEditableKeys(){ return Array.from(document.querySelectorAll('[data-edit]')).map(el => el.id).filter(Boolean); }
     function toggleEdit(flag){ document.body.classList.toggle('editing', !!flag); document.querySelectorAll('[data-edit]').forEach(el => el.contentEditable = flag ? 'true' : 'false'); }
-    function saveEdits(){ const data = {}; getEditableKeys().forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.innerHTML; }); localStorage.setItem('casualDesignEdits', JSON.stringify(data)); alert('Texts saved.'); }
+    function saveEdits(){ const data = {}; getEditableKeys().forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.innerHTML; }); localStorage.setItem('casualDesignEdits', JSON.stringify(data)); alert('Texts saved (local).'); }
     function clearEdits(){ localStorage.removeItem('casualDesignEdits'); alert('Saved texts cleared. Reload to reset.'); }
     function loadEditsData(){ const raw = localStorage.getItem('casualDesignEdits'); if(!raw) return; try{ const data = JSON.parse(raw); Object.entries(data).forEach(([id, html]) => { const el = document.getElementById(id); if(el) el.innerHTML = html; }); } catch(e) { console.warn('Bad edits', e); } }
 
     const editBox = document.getElementById('editToggle'); if(editBox){ editBox.addEventListener('change', e => toggleEdit(e.target.checked)); }
+    loadEditsData();
 
     // Active nav highlight
     const links = Array.from(document.querySelectorAll('[data-nav]'));
@@ -477,6 +464,139 @@
         }
       });
     });
+  </script>
+
+  <!-- === APPEND: Auth + Google Sheets loading & saving === -->
+  <script>
+    // ==== Auth helpers ====
+    function isAdmin() { return localStorage.getItem('cd_role') === 'admin'; }
+    function getToken() { return localStorage.getItem('cd_token') || ''; }
+
+    async function loginFlow() {
+      const email = prompt('Email:');
+      if (!email) return null;
+      const password = prompt('Password:');
+      if (!password) return null;
+
+      const r = await fetch('/api/login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ email, password })
+      });
+      const data = await r.json();
+      if (!data.ok) { alert(data.error || 'Login failed'); return null; }
+      localStorage.setItem('cd_token', data.token);
+      localStorage.setItem('cd_role', data.role);
+      return data;
+    }
+
+    async function openAdmin() {
+      if (!isAdmin()) {
+        const info = await loginFlow();
+        if (info && info.role === 'admin') { toggleAdmin(); }
+        else if (info) alert('You are logged in but not an admin.');
+      } else {
+        toggleAdmin();
+      }
+    }
+
+    // ==== Load content from Google Sheet ====
+    async function loadFromSheet() {
+      try {
+        const r = await fetch('/api/content');
+        const { ok, data } = await r.json();
+        if (!ok) return;
+
+        const map = {
+          hero_title: 'heroTitleDisplay',
+          hero_desc:  'heroDescDisplay',
+          about_title: 'aboutTitle',
+          about_sub:   'aboutSub',
+          about_body:  'aboutBody',
+          services_title: 'servicesTitle',
+          services_sub:   'servicesSub',
+          svc1_title:'svc1Title', svc1_body:'svc1Body',
+          svc2_title:'svc2Title', svc2_body:'svc2Body',
+          svc3_title:'svc3Title', svc3_body:'svc3Body',
+          svc4_title:'svc4Title', svc4_body:'svc4Body',
+          svc5_title:'svc5Title', svc5_body:'svc5Body',
+          svc6_title:'svc6Title', svc6_body:'svc6Body',
+          contact_title:'contactTitle',
+          contact_email:'contactEmailLink',
+          nav_home:'navHome', nav_about:'navAbout', nav_services:'navServices', nav_contact:'navContact',
+          cta_explore:'ctaExplore', cta_start:'ctaStart',
+          label_name:'labelName', label_email:'labelEmail', label_msg:'labelMsg',
+          btn_send:'btnSend'
+        };
+
+        for (const [k, id] of Object.entries(map)) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          if (k === 'contact_email') {
+            el.href = 'mailto:' + (data[k] || 'info@casual-design.com');
+            el.textContent = data[k] || 'info@casual-design.com';
+          } else {
+            if (data[k] != null) el.innerHTML = data[k];
+          }
+        }
+      } catch (e) {
+        console.warn('content load failed', e);
+      }
+    }
+    loadFromSheet();
+
+    // ==== Save edited texts back to Google Sheet (admin only) ====
+    async function saveTextsToSheet() {
+      if (!isAdmin()) return;
+      const token = getToken();
+      const ids = [
+        'heroTitleDisplay','heroDescDisplay','aboutTitle','aboutSub','aboutBody',
+        'servicesTitle','servicesSub',
+        'svc1Title','svc1Body','svc2Title','svc2Body','svc3Title','svc3Body',
+        'svc4Title','svc4Body','svc5Title','svc5Body','svc6Title','svc6Body',
+        'contactTitle','contactEmailLink',
+        'navHome','navAbout','navServices','navContact',
+        'ctaExplore','ctaStart','labelName','labelEmail','labelMsg','btnSend'
+      ];
+      const reverse = {
+        heroTitleDisplay:'hero_title', heroDescDisplay:'hero_desc',
+        aboutTitle:'about_title', aboutSub:'about_sub', aboutBody:'about_body',
+        servicesTitle:'services_title', servicesSub:'services_sub',
+        svc1Title:'svc1_title', svc1Body:'svc1_body',
+        svc2Title:'svc2_title', svc2Body:'svc2_body',
+        svc3Title:'svc3_title', svc3Body:'svc3_body',
+        svc4Title:'svc4_title', svc4Body:'svc4_body',
+        svc5Title:'svc5_title', svc5Body:'svc5_body',
+        svc6Title:'svc6_title', svc6Body:'svc6_body',
+        contactTitle:'contact_title', contactEmailLink:'contact_email',
+        navHome:'nav_home', navAbout:'nav_about', navServices:'nav_services', navContact:'nav_contact',
+        ctaExplore:'cta_explore', ctaStart:'cta_start',
+        labelName:'label_name', labelEmail:'label_email', labelMsg:'label_msg',
+        btnSend:'btn_send'
+      };
+      const updates = {};
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'contactEmailLink') updates[reverse[id]] = (el.textContent || '').trim();
+        else updates[reverse[id]] = el.innerHTML;
+      });
+
+      await fetch('/api/save-content', {
+        method: 'PUT',
+        headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + token },
+        body: JSON.stringify({ updates })
+      });
+    }
+
+    // Hook your existing applyChanges() so it also saves to Sheets
+    if (typeof applyChanges === 'function') {
+      const prev = applyChanges;
+      window.applyChanges = async function() {
+        prev();
+        try { await saveTextsToSheet(); } catch (e) { console.warn('saveTextsToSheet failed', e); }
+      }
+    }
   </script>
 </body>
 </html>
