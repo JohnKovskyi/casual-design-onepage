@@ -1,0 +1,8 @@
+﻿{
+  "name": "casual-design-onepage",
+  "private": true,
+  "dependencies": {
+    "googleapis": "^128.0.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
