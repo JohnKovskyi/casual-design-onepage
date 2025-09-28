@@ -6,23 +6,13 @@ function getSheets() {
     process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     null,
     (process.env.GOOGLE_PRIVATE_KEY || "").replace(/\\n/g, "\n"),
-    ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+    ["https://www.googleapis.com/auth/spreadsheets"]
   );
   return google.sheets({ version: "v4", auth });
 }
 
 function getBody(req) {
-  if (req.body && typeof req.body === "object") return req.body;
-  return new Promise((resolve) => {
-    const chunks = [];
-    req.on("data", (c) => chunks.push(c));
-    req.on("end", () => {
-      try {
-        const raw = Buffer.concat(chunks).toString("utf8");
-        resolve(raw ? JSON.parse(raw) : {});
-      } catch { resolve({}); }
-    });
-  });
+  return Promise.resolve(req.body || {});
 }
 
 module.exports = async (req, res) => {

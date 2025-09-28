@@ -6,7 +6,7 @@ function getSheets() {
     process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     null,
     (process.env.GOOGLE_PRIVATE_KEY || "").replace(/\\n/g, "\n"),
-    ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+    ["https://www.googleapis.com/auth/spreadsheets"]
   );
   return google.sheets({ version: "v4", auth });
 }
