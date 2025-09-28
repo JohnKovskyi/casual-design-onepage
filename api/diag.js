@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
       email,
       null,
       key,
-      ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+      ["https://www.googleapis.com/auth/spreadsheets"]
     );
     const sheets = google.sheets({ version: "v4", auth });
 

@@ -2,12 +2,16 @@
 
 // GET /api/content -> { ok:true, data:{ key:value } }
 function getSheets() {
+  // If the ENV key is stored with literal "\n", convert to real newlines:
+  const privateKey = (process.env.GOOGLE_PRIVATE_KEY || "").replace(/\\n/g, "\n");
+
   const auth = new google.auth.JWT(
     process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     null,
-    (process.env.GOOGLE_PRIVATE_KEY || "").replace(/\\n/g, "\n"),
+    privateKey,
     ["https://www.googleapis.com/auth/spreadsheets"]
   );
+
   return google.sheets({ version: "v4", auth });
 }
 
@@ -16,18 +20,27 @@ module.exports = async (req, res) => {
     res.setHeader("Allow", "GET");
     return res.status(405).end();
   }
+
   try {
+    const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+    if (!spreadsheetId) throw new Error("Missing GOOGLE_SHEET_ID");
+
     const sheets = getSheets();
-    const r = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: "content!A:B"
+
+    const { data } = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: "content!A:B", // tab "content", columns A & B
     });
-    const rows = r.data.values || [];
-    const data = {};
-    rows.forEach(([k, v]) => { if (k) data[k] = v || ""; });
-    res.status(200).json({ ok: true, data });
+
+    const rows = data.values || [];
+    const out = {};
+    for (const [k, v] of rows) out[k] = v ?? "";
+
+    return res.status(200).json({ ok: true, data: out });
   } catch (e) {
-    console.error("content error", e);
-    res.status(500).json({ ok: false, error: "Failed to read content" });
+    console.error("content error:", e?.message || e);
+    return res
+      .status(500)
+      .json({ ok: false, error: e?.message || "Failed to read content" });
   }
 };
