@@ -1,316 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
   <title>Casual Design</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    /* ---------- Global theme (page) ---------- */
-    :root{
-      --bg: #ffffff;        /* page background (from Sheets: bg_color) */
-      --fg: #111111;        /* page text */
-      --muted: #666666;
-      --border: #e6e0d6;    /* soft line on your beige */
-      --accent: #111111;
-      --accent-contrast: #ffffff;
+    /* ---------- Root theme variables ---------- */
+    :root {
+      --bg: #ffffff;
+      --fg: #111111;
+      --border: #eaeaea;
 
-      --header-h: 64px;
-      --header-h-lg: 88px;
-
-      /* Header is always light */
       --header-bg: #ffffff;
       --header-fg: #111111;
       --header-border: #eaeaea;
-    }
-    /* Inverted page (dark) — header stays white */
-    body.inverted{
-      --bg: #111111;
-      --fg: #f5f5f5;
-      --muted: #bbbbbb;
-      --border: #2a2a2a;
-      --accent: #ffffff;
-      --accent-contrast: #111111;
+
+      --form-bg: #ffffff;
+      --form-fg: #111111;
+      --form-border: #e6e6e6;
+
+      --header-h: 64px;
     }
 
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      color:var(--fg);
-      background:var(--bg);
-      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;
-    }
-    a{color:inherit;text-decoration:none}
-
-    /* ---------- Header (always light) ---------- */
-    .site-header{
-      position:sticky; top:0; z-index:1000;
-      background:var(--header-bg);
-      color:var(--header-fg);
-      border-bottom:1px solid var(--header-border);
-      height:var(--header-h);
-      display:flex; align-items:center; justify-content:space-between;
-      gap:16px; padding:8px 16px;
-    }
-    .brand{display:inline-flex; align-items:center; gap:12px; color:var(--header-fg)}
-    .logo-slot svg, .brand img {height:42px; width:auto; display:block}
-
-    .nav{position:fixed; inset:var(--header-h) 0 auto 0; display:none;
-         flex-direction:column; gap:8px; background:var(--header-bg);
-         border-bottom:1px solid var(--header-border); padding:12px 16px}
-    .nav.open{display:flex}
-    .nav a{font-weight:700; padding:12px 0; color:var(--header-fg)}
-    .nav a.active{border-bottom:3px solid var(--header-fg)}
-    .nav-toggle{width:44px;height:44px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer}
-    .nav-toggle .bar{width:22px;height:2px;background:var(--header-fg);margin:3px 0;display:block}
-
-    @media (min-width:768px){
-      .site-header{height:var(--header-h-lg); padding:12px 24px}
-      .logo-slot svg, .brand img {height:54px}
-      .nav{position:static; display:flex; flex-direction:row; gap:28px; padding:0; border:0}
-      .nav a{padding:8px 0}
-      .nav-toggle{display:none}
-      section[id]{scroll-margin-top:var(--header-h-lg)}
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
     }
 
-    /* ---------- Sections / blocks ---------- */
-    section{padding:80px 16px; border-bottom:1px solid var(--border)}
-    h1,h2,h3{margin:0 0 12px}
-    p{margin:0 0 10px}
-    .muted{color:var(--muted)}
-    .card{border:1px solid var(--fg); padding:18px; margin:18px 0; border-radius:2px}
-
-    /* ---------- Media / hero ---------- */
-    .media { display:grid; gap:16px; align-items:start }
-    .media img { width:100%; height:auto; display:block; border:1px solid var(--border); border-radius:6px }
-    .hero-img { width:100%; height:260px; object-fit:cover; border-radius:6px; border:1px solid var(--border) }
-    @media (min-width:900px){
-      .media--2col { grid-template-columns: 1.2fr 1fr; }
-      .media--rev  { grid-template-columns: 1fr 1.2fr; }
-      .hero-img{ height:320px; }
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--header-bg);
+      color: var(--header-fg);
+      border-bottom: 1px solid var(--header-border);
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 16px;
+    }
+    .nav a {
+      color: var(--header-fg);
+      text-decoration: none;
+      margin-left: 1em;
+    }
+    .nav a.active {
+      border-bottom: 3px solid var(--header-fg);
+    }
+    .nav-toggle .bar {
+      display: block;
+      width: 24px;
+      height: 3px;
+      margin: 5px auto;
+      background: var(--header-fg);
     }
 
-    /* ---------- Forms (always white fields) ---------- */
-    input,textarea,button{font:inherit}
-    input,textarea{
-      width:100%; padding:12px 14px;
-      border:1px solid #e6e6e6; border-radius:6px;
-      background:#ffffff; color:#111111;    /* always white field for readability */
-      outline:none;
+    /* ---------- Hero strip ---------- */
+    .hero-strip {
+      background: #fff;
+      border-bottom: 1px solid #eaeaea;
+      padding: 24px 16px 16px;
     }
-    input:focus, textarea:focus{border-color:#c9c9c9; box-shadow:0 0 0 2px rgba(0,0,0,.03)}
-    button{
-      padding:12px 18px; border:1px solid var(--accent);
-      background:var(--accent); color:var(--accent-contrast);
-      border-radius:10px; cursor:pointer; font-weight:700;
+
+    /* ---------- Sections ---------- */
+    section {
+      padding: 40px 20px;
+    }
+
+    /* ---------- Contact form ---------- */
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 6px;
+      outline: none;
+      background: var(--form-bg);
+      color: var(--form-fg);
+      border: 1px solid var(--form-border);
+      font-size: 16px;
+    }
+    input:focus,
+    textarea:focus {
+      border-color: #c9c9c9;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.03);
+    }
+    input:-webkit-autofill,
+    textarea:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 30px var(--form-bg) inset !important;
+      -webkit-text-fill-color: var(--form-fg) !important;
+    }
+
+    button {
+      background: var(--header-fg);
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
-<body id="top">
-  <!-- Header -->
+<body>
+  <!-- ---------- Header ---------- -->
   <header class="site-header">
-    <a class="brand" href="#home" aria-label="Home">
-      <span id="logo-slot" class="logo-slot" aria-hidden="true"></span>
-      <!-- Fallback only -->
-      <img id="logo-fallback" src="/logo.svg" alt="Casual Design" />
-    </a>
-    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
-      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-    </button>
-    <nav class="nav" id="site-nav">
-      <a href="#home"     data-key="nav_home">Home</a>
-      <a href="#about"    data-key="nav_about">About</a>
-      <a href="#services" data-key="nav_services">Services</a>
-      <a href="#contact"  data-key="nav_contact">Contact</a>
+    <div class="logo">
+      <img id="logo" src="" alt="Logo" height="40">
+    </div>
+    <nav class="nav">
+      <a href="#home" id="nav_home">HOME</a>
+      <a href="#about" id="nav_about">ABOUT</a>
+      <a href="#services" id="nav_services">SERVICES</a>
+      <a href="#contact" id="nav_contact">CONTACT</a>
     </nav>
   </header>
 
-  <!-- Home / Hero -->
-  <section id="home">
-    <div class="media media--2col">
-      <div>
-        <h1 data-key="hero_title">2D &amp; 3D Drafting</h1>
-        <p class="muted" data-key="hero_desc">
-          Architecture &amp; interiors, tailored with a quiet logic…
-        </p>
-      </div>
-      <div>
-        <img
-          class="hero-img"
-          data-key="hero_img_url"
-          src=""
-          alt=""
-          data-alt="hero_img_alt"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    </div>
+  <!-- ---------- Hero ---------- -->
+  <section id="home" class="hero-strip">
+    <h1 id="hero_title"></h1>
+    <p id="hero_desc"></p>
+    <img id="hero_img" src="" alt="" style="max-width:100%; border-radius:8px;">
   </section>
 
-  <!-- About -->
+  <!-- ---------- About ---------- -->
   <section id="about">
-    <div class="card">
-      <h2 data-key="about_title">About Casual Design</h2>
-      <p class="muted" data-key="about_sub">Design that feels effortless…</p>
-      <p data-key="about_body">
-        We help homeowners and developers make clear decisions—fast…
-      </p>
-    </div>
+    <h2 id="about_title"></h2>
+    <p id="about_sub"></p>
+    <p id="about_body"></p>
   </section>
 
-  <!-- Services -->
+  <!-- ---------- Services ---------- -->
   <section id="services">
-    <h2 data-key="services_title">Services</h2>
-    <p class="muted" data-key="services_sub">Modular scope. Fixed deliverables…</p>
-
-    <!-- Service 1 -->
-    <div class="media media--2col card">
-      <div>
-        <h3 data-key="svc1_title">Concept &amp; Feasibility</h3>
-        <p data-key="svc1_body">Briefing, code scan, site study…</p>
-      </div>
-      <div>
-        <img
-          data-key="svc1_img_url"
-          src=""
-          alt=""
-          data-alt="svc1_img_alt"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    </div>
-
-    <!-- Service 2 -->
-    <div class="media media--rev card">
-      <div>
-        <img
-          data-key="svc2_img_url"
-          src=""
-          alt=""
-          data-alt="svc2_img_alt"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-      <div>
-        <h3 data-key="svc2_title">Design &amp; Visualization</h3>
-        <p data-key="svc2_body">Detailed drawings, coordination…</p>
-      </div>
-    </div>
+    <h2 id="services_title"></h2>
+    <p id="services_sub"></p>
   </section>
 
-  <!-- Contact -->
+  <!-- ---------- Contact ---------- -->
   <section id="contact">
-    <h2 data-key="contact_title">Contact</h2>
-    <p><a href="mailto:info@casual-design.com" data-key="contact_email">info@casual-design.com</a></p>
-
-    <div class="card">
-      <label data-key="label_name">Your name</label>
-      <input type="text" name="name"><br><br>
-
-      <label data-key="label_email">Your email</label>
-      <input type="email" name="email"><br><br>
-
-      <label data-key="label_msg">Message</label>
-      <textarea name="message" rows="8"></textarea><br><br>
-
-      <button type="button" data-key="btn_send">Send message</button>
-    </div>
+    <h2 id="contact_title">Contact</h2>
+    <p><a id="contact_email" href="mailto:info@casual-design.com">info@casual-design.com</a></p>
+    <form>
+      <label id="label_name"></label>
+      <input type="text" name="name">
+      <label id="label_email"></label>
+      <input type="email" name="email">
+      <label id="label_msg"></label>
+      <textarea name="message"></textarea>
+      <button type="submit" id="btn_send"></button>
+    </form>
   </section>
 
   <script>
-    // ------- Mobile menu
-    const btn = document.querySelector('.nav-toggle');
-    const nav = document.getElementById('site-nav');
-    const links = [...document.querySelectorAll('.nav a')];
-    function toggleMenu(open){
-      const isOpen = open !== undefined ? open : !nav.classList.contains('open');
-      nav.classList.toggle('open', isOpen);
-      btn.setAttribute('aria-expanded', isOpen);
-      document.body.style.overflow = isOpen ? 'hidden' : '';
-    }
-    btn?.addEventListener('click', () => toggleMenu());
-    links.forEach(a => a.addEventListener('click', () => toggleMenu(false)));
-
-    // ------- Active link highlight
-    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-    const obs = new IntersectionObserver(entries => {
-      const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-      if(!vis) return;
-      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${vis.target.id}`));
-    }, {rootMargin:"-40% 0px -55% 0px", threshold:[0,0.25,0.5,0.75,1]});
-    sections.forEach(el => obs.observe(el));
-
-    // ------- Content from Google Sheets
-    async function loadContent(){
+    async function loadContent() {
       try {
-        const res = await fetch('/api/content?ts=' + Date.now()); // cache-bust JSON
-        const payload = await res.json();
-        const data = payload.data || payload;
+        const res = await fetch('/api/content');
+        const json = await res.json();
+        const data = json.data || {};
 
-        /* Theme from sheet */
-        const bg = (data.bg_color || '').toString().trim();
-        const mode = (data.theme_mode || '').toString().trim().toLowerCase();
-
-        if (bg) {
-          document.documentElement.style.setProperty('--bg', bg);
+        // --- Hero ---
+        document.getElementById('hero_title').textContent = data.hero_title || '';
+        document.getElementById('hero_desc').textContent = data.hero_desc || '';
+        if (data.hero_img_url) {
+          document.getElementById('hero_img').src = data.hero_img_url;
         }
-        if (mode === 'inverted') {
-          document.body.classList.add('inverted');
+
+        // --- About ---
+        document.getElementById('about_title').textContent = data.about_title || '';
+        document.getElementById('about_sub').textContent = data.about_sub || '';
+        document.getElementById('about_body').textContent = data.about_body || '';
+
+        // --- Services ---
+        document.getElementById('services_title').textContent = data.services_title || '';
+        document.getElementById('services_sub').textContent = data.services_sub || '';
+
+        // --- Contact ---
+        document.getElementById('contact_title').textContent = data.contact_title || 'Contact';
+        document.getElementById('contact_email').textContent = data.contact_email || 'info@casual-design.com';
+        document.getElementById('contact_email').href = `mailto:${data.contact_email || 'info@casual-design.com'}`;
+        document.getElementById('label_name').textContent = data.label_name || 'YOUR NAME';
+        document.getElementById('label_email').textContent = data.label_email || 'EMAIL';
+        document.getElementById('label_msg').textContent = data.label_msg || 'MESSAGE';
+        document.getElementById('btn_send').textContent = data.btn_send || 'SEND MESSAGE';
+
+        // --- Logo ---
+        if (data.logo_url) {
+          document.getElementById('logo').src = data.logo_url;
+        }
+
+        // --- Colors & themes ---
+        if (data.bg_color) {
+          document.documentElement.style.setProperty('--bg', data.bg_color);
+        }
+        if (data.theme_mode === 'inverted') {
+          document.documentElement.style.setProperty('--fg', '#ffffff');
+          document.documentElement.style.setProperty('--border', '#444444');
         } else {
-          document.body.classList.remove('inverted');
+          document.documentElement.style.setProperty('--fg', '#111111');
+          document.documentElement.style.setProperty('--border', '#eaeaea');
         }
 
-        /* Fill all dynamic nodes */
-        document.querySelectorAll('[data-key]').forEach(node=>{
-          const key = node.getAttribute('data-key');
-          if(!(key in data)) return;
-          const raw = String(data[key] ?? '');
+        // --- Row 56: ui_white toggle ---
+        (function applyUiWhite() {
+          const uiWhite = String(data.ui_white || 'white').trim().toLowerCase();
 
-          // Special: Logo
-          if (key === 'logo_url') {
-            const slot = document.getElementById('logo-slot');
-            const fallback = document.getElementById('logo-fallback');
+          if (uiWhite === 'white') {
+            // Header always white
+            document.documentElement.style.setProperty('--header-bg', '#ffffff');
+            document.documentElement.style.setProperty('--header-fg', '#111111');
+            document.documentElement.style.setProperty('--header-border', '#eaeaea');
 
-            // add version to avoid Cloudinary/browser cache
-            const url = raw + (raw.includes('?') ? '&' : '?') + 'bust=' + Date.now();
-
-            if (raw.toLowerCase().endsWith('.svg')) {
-              fetch(url, { cache: 'no-store' })
-                .then(r => r.text())
-                .then(svg => {
-                  // Inline the SVG so it renders crisply in the white header
-                  // (No tinting here—keeps your original black artwork.)
-                  slot.innerHTML = svg;
-                  if (fallback) fallback.style.display = 'none';
-                })
-                .catch(() => { if (fallback) fallback.src = raw; });
-            } else {
-              if (fallback) fallback.src = raw;
-            }
-            return; // handled
-          }
-
-          if (node.tagName === 'A' && /email/i.test(key)) {
-            node.textContent = raw;
-            node.href = `mailto:${raw}`;
-          } else if (node.tagName === 'IMG') {
-            if (raw) node.src = raw;
-            const altKey = node.getAttribute('data-alt');
-            if (altKey && (altKey in data)) node.alt = String(data[altKey]);
-          } else if (node.matches('input') || node.matches('textarea')) {
-            node.value = raw;
+            // Contact fields always white
+            document.documentElement.style.setProperty('--form-bg', '#ffffff');
+            document.documentElement.style.setProperty('--form-fg', '#111111');
+            document.documentElement.style.setProperty('--form-border', '#e6e6e6');
           } else {
-            node.innerHTML = raw.replace(/\n/g,'<br>');
+            // AUTO: header + fields follow theme
+            const rs = getComputedStyle(document.documentElement);
+            const bg = rs.getPropertyValue('--bg').trim() || '#ffffff';
+            const fg = rs.getPropertyValue('--fg').trim() || '#111111';
+            const border = rs.getPropertyValue('--border').trim() || '#eaeaea';
+
+            document.documentElement.style.setProperty('--header-bg', bg);
+            document.documentElement.style.setProperty('--header-fg', fg);
+            document.documentElement.style.setProperty('--header-border', border);
+
+            document.documentElement.style.setProperty('--form-bg', bg);
+            document.documentElement.style.setProperty('--form-fg', fg);
+            document.documentElement.style.setProperty('--form-border', border);
           }
-        });
+        })();
 
       } catch (err) {
-        console.error('Failed to load content', err);
+        console.error('Error loading content:', err);
       }
     }
+
     loadContent();
   </script>
 </body>
