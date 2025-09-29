@@ -2,152 +2,168 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Casual Design</title>
   <style>
-    /* ----------------------------
-       Base & Layout
-    ----------------------------- */
-    :root {
-      --header-h: 64px;     /* mobile header height */
-      --header-h-lg: 88px;  /* desktop header height */
+    :root{ --header-h:64px; --header-h-lg:88px; }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;color:#111;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    a{color:inherit}
+    /* Sections */
+    section{padding:80px 16px;border-bottom:1px solid #eee}
+    section[id]{scroll-margin-top:var(--header-h)}
+    section > :first-child{margin-top:0}
+    h1,h2,h3{margin:0 0 12px}
+    p{margin:0 0 10px}
+    /* Header / nav */
+    .site-header{
+      position:sticky; top:0; z-index:1000; background:#fff; border-bottom:1px solid #eee;
+      height:var(--header-h); display:flex; align-items:center; justify-content:space-between; padding:8px 16px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: Arial, sans-serif; color: #111; }
-
-    section {
-      padding: 80px 16px;
-      border-bottom: 1px solid #eee;
+    .brand{display:inline-flex; align-items:center; gap:10px; text-decoration:none}
+    .brand img{height:40px; width:auto; display:block}
+    .nav{position:fixed; inset:var(--header-h) 0 auto 0; display:none; flex-direction:column; background:#fff; border-bottom:1px solid #eee; padding:12px 16px}
+    .nav.open{display:flex}
+    .nav a{display:block; padding:14px 8px; font-weight:700; text-decoration:none}
+    .nav a.active{border-bottom:3px solid #111}
+    .nav-toggle{width:44px;height:44px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer}
+    .nav-toggle .bar{width:22px;height:2px;background:#111;margin:3px 0;display:block}
+    @media (min-width:768px){
+      .site-header{height:var(--header-h-lg); padding:12px 24px}
+      .brand img{height:54px}
+      .nav{position:static; display:flex; flex-direction:row; gap:24px; padding:0; border:0}
+      .nav a{padding:8px 0}
+      .nav-toggle{display:none}
+      section[id]{scroll-margin-top:var(--header-h-lg)}
     }
-    section > :first-child { margin-top: 0; }
-
-    section[id] { scroll-margin-top: var(--header-h); }
-
-    h1, h2 { margin-bottom: 16px; }
-    p { margin-bottom: 12px; }
-
-    /* ----------------------------
-       Header / Navigation
-    ----------------------------- */
-    .site-header {
-      position: sticky; top: 0; z-index: 1000;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 16px;
-      height: var(--header-h);
-      background: #fff; border-bottom: 1px solid #eee;
-    }
-    .brand img {
-      height: 40px; width: auto; display: block;
-    }
-
-    /* Nav: mobile (hidden by default) */
-    .nav {
-      position: fixed; inset: var(--header-h) 0 auto 0;
-      display: none; flex-direction: column;
-      background: #fff; padding: 12px 16px; border-bottom: 1px solid #eee;
-    }
-    .nav a {
-      display: block;
-      padding: 14px 8px;
-      font-weight: 700;
-      text-decoration: none;
-      color: #111;
-    }
-    .nav.open { display: flex; }
-
-    /* Hamburger button */
-    .nav-toggle {
-      width: 44px; height: 44px;
-      border: 0; background: transparent; cursor: pointer;
-      display: grid; place-items: center;
-    }
-    .nav-toggle .bar {
-      display: block; width: 22px; height: 2px; margin: 3px 0; background: #111;
-    }
-
-    /* Desktop styles */
-    @media (min-width: 768px) {
-      .site-header { height: var(--header-h-lg); padding: 12px 24px; }
-      .brand img { height: 54px; }
-      .nav { 
-        position: static; display: flex; flex-direction: row; gap: 24px;
-        border: 0; padding: 0;
-      }
-      .nav a { padding: 8px 0; }
-      .nav-toggle { display: none; }
-      section[id] { scroll-margin-top: var(--header-h-lg); }
-    }
-
-    /* Active link underline */
-    .nav a.active { border-bottom: 3px solid #111; }
+    /* Simple card blocks */
+    .card{border:1px solid #111; padding:18px; margin:18px 0}
+    .muted{color:#666}
+    input,textarea,button{font:inherit}
+    input,textarea{width:100%; padding:10px; border:1px solid #bbb; border-radius:4px}
+    button{padding:10px 16px; border:1px solid #111; background:#111; color:#fff; border-radius:6px; cursor:pointer}
   </style>
 </head>
 <body id="top">
 
-  <!-- ---------------- Header ---------------- -->
+  <!-- Header -->
   <header class="site-header">
-    <a href="#top" class="brand" aria-label="Casual Design home">
-      <img src="logo.svg" alt="Casual Design logo" />
+    <a class="brand" href="#home" aria-label="Home">
+      <img src="/logo.svg" alt="Casual Design" />
     </a>
-
     <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
       <span class="bar"></span><span class="bar"></span><span class="bar"></span>
     </button>
-
     <nav class="nav" id="site-nav">
+      <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#services">Services</a>
       <a href="#contact">Contact</a>
-      <!-- ADMIN removed -->
     </nav>
   </header>
 
-  <!-- ---------------- Sections ---------------- -->
+  <!-- Home / Hero -->
+  <section id="home">
+    <h1 data-key="hero_title">2D &amp; 3D Drafting</h1>
+    <p class="muted" data-key="hero_desc">
+      Architecture &amp; interiors, tailored with a quiet logic…
+    </p>
+  </section>
+
+  <!-- About -->
   <section id="about">
-    <h2>About Casual Design</h2>
-    <p>Design that feels effortless. Calm plans, honest drawings, and flexible thinking for private clients and companies.</p>
+    <div class="card">
+      <h2 data-key="about_title">About Casual Design</h2>
+      <p class="muted" data-key="about_sub">Design that feels effortless…</p>
+      <p data-key="about_body">
+        We help homeowners and developers make clear decisions—fast…
+      </p>
+    </div>
   </section>
 
+  <!-- Services -->
   <section id="services">
-    <h2>Services</h2>
-    <p>Modular scope. Fixed deliverables. Transparent fees.</p>
-    <h3>Concept & Feasibility</h3>
-    <p>Quick models, space planning, cost check.</p>
-    <h3>Design Development</h3>
-    <p>Detailed drawings, coordination, presentation.</p>
+    <h2 data-key="services_title">Services</h2>
+    <p class="muted" data-key="services_sub">Modular scope. Fixed deliverables…</p>
+
+    <div class="card">
+      <h3 data-key="svc1_title">Concept &amp; Feasibility</h3>
+      <p data-key="svc1_body">Briefing, code scan, site study…</p>
+    </div>
+
+    <div class="card">
+      <h3 data-key="svc2_title">Design &amp; Visualization</h3>
+      <p data-key="svc2_body">Detailed drawings, coordination…</p>
+    </div>
+    <!-- Add more blocks if you add keys like svc3_title, svc3_body, etc. -->
   </section>
 
+  <!-- Contact -->
   <section id="contact">
-    <h2>Contact</h2>
-    <p><a href="mailto:info@casual-design.com">info@casual-design.com</a></p>
-    <form>
+    <h2 data-key="contact_title">Contact</h2>
+    <p><a href="mailto:info@casual-design.com" data-key="contact_email">info@casual-design.com</a></p>
+
+    <div class="card">
       <label>Your name<br><input type="text" name="name"></label><br><br>
       <label>Your email<br><input type="email" name="email"></label><br><br>
-      <label>Message<br><textarea name="message"></textarea></label><br><br>
-      <button type="submit">Send</button>
-    </form>
+      <label>Message<br><textarea name="message" rows="5"></textarea></label><br><br>
+      <button type="button">Send</button>
+    </div>
   </section>
 
-  <!-- ---------------- JS ---------------- -->
   <script>
+    // Mobile menu + scroll lock
     const btn = document.querySelector('.nav-toggle');
     const nav = document.getElementById('site-nav');
-    btn?.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
-      btn.setAttribute('aria-expanded', open);
-    });
+    const links = [...document.querySelectorAll('.nav a')];
+    function toggleMenu(open){
+      const isOpen = open !== undefined ? open : !nav.classList.contains('open');
+      nav.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+    btn?.addEventListener('click', () => toggleMenu());
+    links.forEach(a => a.addEventListener('click', () => toggleMenu(false)));
 
-    // Highlight active link on scroll
-    const links = [...document.querySelectorAll('.nav a[href^="#"]')];
-    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-    const observer = new IntersectionObserver(entries => {
-      const visible = entries.filter(e => e.isIntersecting)
-                             .sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-      if(!visible) return;
-      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${visible.target.id}`));
-    }, { rootMargin: "-40% 0px -55% 0px", threshold:[0,0.25,0.5,0.75,1] });
-    sections.forEach(el => observer.observe(el));
+    // Active link highlight
+    const sections = links
+      .map(a => document.querySelector(a.getAttribute('href')))
+      .filter(Boolean);
+    const obs = new IntersectionObserver(entries => {
+      const vis = entries.filter(e=>e.isIntersecting)
+                         .sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+      if(!vis) return;
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${vis.target.id}`));
+    }, {rootMargin:"-40% 0px -55% 0px", threshold:[0,0.25,0.5,0.75,1]});
+    sections.forEach(el => obs.observe(el));
+
+    // ---------- Google Sheets content via Vercel API ----------
+    async function loadContent(){
+      let res;
+      try {
+        res = await fetch('/api/content'); // preferred
+        if(!res.ok) throw 0;
+      } catch {
+        res = await fetch('/api/content.js'); // fallback if route name is .js
+      }
+      const data = await res.json();
+
+      // Fill nodes with data-key="sheet_key"
+      document.querySelectorAll('[data-key]').forEach(node=>{
+        const key = node.getAttribute('data-key');
+        if(!(key in data)) return;
+
+        // allow multi-line cells in Sheets using \n
+        const value = String(data[key]).replace(/\n/g,'<br>');
+        if(node.tagName === 'A' && /email/i.test(key)) {
+          node.textContent = data[key];
+          node.href = `mailto:${data[key]}`;
+        } else {
+          node.innerHTML = value;
+        }
+      });
+    }
+    loadContent().catch(console.error);
   </script>
 </body>
 </html>
