@@ -5,18 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Casual Design</title>
   <style>
-    /* ---------- THEME VARIABLES (can be overridden by Sheets) ---------- */
+    /* ---------- Global theme (page) ---------- */
     :root{
-      --bg: #ffffff;
-      --fg: #111111;
+      --bg: #ffffff;        /* page background (from Sheets: bg_color) */
+      --fg: #111111;        /* page text */
       --muted: #666666;
-      --border: #eeeeee;
-      --accent: #111111;     /* buttons/active underline */
+      --border: #e6e0d6;    /* soft line on your beige */
+      --accent: #111111;
       --accent-contrast: #ffffff;
+
       --header-h: 64px;
       --header-h-lg: 88px;
+
+      /* Header is always light */
+      --header-bg: #ffffff;
+      --header-fg: #111111;
+      --header-border: #eaeaea;
     }
-    /* Inverted preset; JS toggles .inverted on <body> when theme_mode=inverted */
+    /* Inverted page (dark) — header stays white */
     body.inverted{
       --bg: #111111;
       --fg: #f5f5f5;
@@ -32,47 +38,49 @@
       margin:0;
       color:var(--fg);
       background:var(--bg);
-      font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;
     }
-    a{color:inherit}
+    a{color:inherit;text-decoration:none}
 
-    /* Sections */
-    section{padding:80px 16px; border-bottom:1px solid var(--border)}
-    section[id]{scroll-margin-top:var(--header-h)}
-    h1,h2,h3{margin:0 0 12px}
-    p{margin:0 0 10px}
-
-    /* Header / nav */
+    /* ---------- Header (always light) ---------- */
     .site-header{
       position:sticky; top:0; z-index:1000;
-      background:var(--bg); border-bottom:1px solid var(--border);
-      height:var(--header-h); display:flex; align-items:center; justify-content:space-between; padding:8px 16px;
+      background:var(--header-bg);
+      color:var(--header-fg);
+      border-bottom:1px solid var(--header-border);
+      height:var(--header-h);
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px; padding:8px 16px;
     }
-    .brand{display:inline-flex; align-items:center; gap:10px; text-decoration:none}
-    .logo-slot svg, .brand img {height:40px; width:auto; display:block}
-    .nav{position:fixed; inset:var(--header-h) 0 auto 0; display:none; flex-direction:column; background:var(--bg); border-bottom:1px solid var(--border); padding:12px 16px}
+    .brand{display:inline-flex; align-items:center; gap:12px; color:var(--header-fg)}
+    .logo-slot svg, .brand img {height:42px; width:auto; display:block}
+
+    .nav{position:fixed; inset:var(--header-h) 0 auto 0; display:none;
+         flex-direction:column; gap:8px; background:var(--header-bg);
+         border-bottom:1px solid var(--header-border); padding:12px 16px}
     .nav.open{display:flex}
-    .nav a{display:block; padding:14px 8px; font-weight:700; text-decoration:none}
-    .nav a.active{border-bottom:3px solid var(--accent)}
+    .nav a{font-weight:700; padding:12px 0; color:var(--header-fg)}
+    .nav a.active{border-bottom:3px solid var(--header-fg)}
     .nav-toggle{width:44px;height:44px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer}
-    .nav-toggle .bar{width:22px;height:2px;background:var(--fg);margin:3px 0;display:block}
+    .nav-toggle .bar{width:22px;height:2px;background:var(--header-fg);margin:3px 0;display:block}
+
     @media (min-width:768px){
       .site-header{height:var(--header-h-lg); padding:12px 24px}
       .logo-slot svg, .brand img {height:54px}
-      .nav{position:static; display:flex; flex-direction:row; gap:24px; padding:0; border:0}
+      .nav{position:static; display:flex; flex-direction:row; gap:28px; padding:0; border:0}
       .nav a{padding:8px 0}
       .nav-toggle{display:none}
       section[id]{scroll-margin-top:var(--header-h-lg)}
     }
 
-    /* Cards / inputs / buttons */
-    .card{border:1px solid var(--fg); padding:18px; margin:18px 0}
+    /* ---------- Sections / blocks ---------- */
+    section{padding:80px 16px; border-bottom:1px solid var(--border)}
+    h1,h2,h3{margin:0 0 12px}
+    p{margin:0 0 10px}
     .muted{color:var(--muted)}
-    input,textarea,button{font:inherit}
-    input,textarea{width:100%; padding:10px; border:1px solid var(--border); background:var(--bg); color:var(--fg); border-radius:4px}
-    button{padding:10px 16px; border:1px solid var(--accent); background:var(--accent); color:var(--accent-contrast); border-radius:6px; cursor:pointer}
+    .card{border:1px solid var(--fg); padding:18px; margin:18px 0; border-radius:2px}
 
-    /* Media / hero */
+    /* ---------- Media / hero ---------- */
     .media { display:grid; gap:16px; align-items:start }
     .media img { width:100%; height:auto; display:block; border:1px solid var(--border); border-radius:6px }
     .hero-img { width:100%; height:260px; object-fit:cover; border-radius:6px; border:1px solid var(--border) }
@@ -81,15 +89,29 @@
       .media--rev  { grid-template-columns: 1fr 1.2fr; }
       .hero-img{ height:320px; }
     }
+
+    /* ---------- Forms (always white fields) ---------- */
+    input,textarea,button{font:inherit}
+    input,textarea{
+      width:100%; padding:12px 14px;
+      border:1px solid #e6e6e6; border-radius:6px;
+      background:#ffffff; color:#111111;    /* always white field for readability */
+      outline:none;
+    }
+    input:focus, textarea:focus{border-color:#c9c9c9; box-shadow:0 0 0 2px rgba(0,0,0,.03)}
+    button{
+      padding:12px 18px; border:1px solid var(--accent);
+      background:var(--accent); color:var(--accent-contrast);
+      border-radius:10px; cursor:pointer; font-weight:700;
+    }
   </style>
 </head>
 <body id="top">
-
   <!-- Header -->
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Home">
-      <span id="logo-slot" class="logo-slot"></span>
-      <!-- fallback only -->
+      <span id="logo-slot" class="logo-slot" aria-hidden="true"></span>
+      <!-- Fallback only -->
       <img id="logo-fallback" src="/logo.svg" alt="Casual Design" />
     </a>
     <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
@@ -107,7 +129,7 @@
   <section id="home">
     <div class="media media--2col">
       <div>
-        <h1 class="hero-title" data-key="hero_title">2D &amp; 3D Drafting</h1>
+        <h1 data-key="hero_title">2D &amp; 3D Drafting</h1>
         <p class="muted" data-key="hero_desc">
           Architecture &amp; interiors, tailored with a quiet logic…
         </p>
@@ -192,14 +214,14 @@
       <input type="email" name="email"><br><br>
 
       <label data-key="label_msg">Message</label>
-      <textarea name="message" rows="5"></textarea><br><br>
+      <textarea name="message" rows="8"></textarea><br><br>
 
-      <button type="button" data-key="btn_send">Send</button>
+      <button type="button" data-key="btn_send">Send message</button>
     </div>
   </section>
 
   <script>
-    // Mobile menu + scroll lock
+    // ------- Mobile menu
     const btn = document.querySelector('.nav-toggle');
     const nav = document.getElementById('site-nav');
     const links = [...document.querySelectorAll('.nav a')];
@@ -212,7 +234,7 @@
     btn?.addEventListener('click', () => toggleMenu());
     links.forEach(a => a.addEventListener('click', () => toggleMenu(false)));
 
-    // Active link highlight
+    // ------- Active link highlight
     const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
     const obs = new IntersectionObserver(entries => {
       const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
@@ -221,50 +243,54 @@
     }, {rootMargin:"-40% 0px -55% 0px", threshold:[0,0.25,0.5,0.75,1]});
     sections.forEach(el => obs.observe(el));
 
-    // ---------- Load content from Google Sheets via /api/content ----------
+    // ------- Content from Google Sheets
     async function loadContent(){
       try {
-        const res = await fetch('/api/content?ts=' + Date.now()); // cache-bust
+        const res = await fetch('/api/content?ts=' + Date.now()); // cache-bust JSON
         const payload = await res.json();
         const data = payload.data || payload;
 
-        // Apply theme controls first
-        // bg_color: any CSS color; theme_mode: 'normal' | 'inverted'
-        if ('bg_color' in data && String(data.bg_color).trim()){
-          document.documentElement.style.setProperty('--bg', String(data.bg_color).trim());
-          // When background changes, keep borders readable if very dark
-          // (optional heuristic)
+        /* Theme from sheet */
+        const bg = (data.bg_color || '').toString().trim();
+        const mode = (data.theme_mode || '').toString().trim().toLowerCase();
+
+        if (bg) {
+          document.documentElement.style.setProperty('--bg', bg);
         }
-        if (String(data.theme_mode || '').toLowerCase() === 'inverted'){
+        if (mode === 'inverted') {
           document.body.classList.add('inverted');
         } else {
           document.body.classList.remove('inverted');
         }
 
-        // Fill all dynamic nodes
+        /* Fill all dynamic nodes */
         document.querySelectorAll('[data-key]').forEach(node=>{
           const key = node.getAttribute('data-key');
           if(!(key in data)) return;
           const raw = String(data[key] ?? '');
 
-          // Special handling
+          // Special: Logo
           if (key === 'logo_url') {
             const slot = document.getElementById('logo-slot');
             const fallback = document.getElementById('logo-fallback');
-            const url = raw + (raw.includes('?') ? '&' : '?') + 'ts=' + Date.now(); // cache-bust SVG
 
-            if (raw.endsWith('.svg')) {
+            // add version to avoid Cloudinary/browser cache
+            const url = raw + (raw.includes('?') ? '&' : '?') + 'bust=' + Date.now();
+
+            if (raw.toLowerCase().endsWith('.svg')) {
               fetch(url, { cache: 'no-store' })
                 .then(r => r.text())
                 .then(svg => {
-                  slot.innerHTML = svg; // inline SVG (font already outlined or embedded)
+                  // Inline the SVG so it renders crisply in the white header
+                  // (No tinting here—keeps your original black artwork.)
+                  slot.innerHTML = svg;
                   if (fallback) fallback.style.display = 'none';
                 })
                 .catch(() => { if (fallback) fallback.src = raw; });
             } else {
               if (fallback) fallback.src = raw;
             }
-            return; // handled separately
+            return; // handled
           }
 
           if (node.tagName === 'A' && /email/i.test(key)) {
