@@ -139,31 +139,28 @@
 
     // ---------- Google Sheets content via Vercel API ----------
     async function loadContent(){
-      let res;
       try {
-        res = await fetch('/api/content'); // preferred
-        if(!res.ok) throw 0;
-      } catch {
-        res = await fetch('/api/content.js'); // fallback if route name is .js
+        const res = await fetch('/api/content?ts=' + Date.now()); // cache-bust
+        const payload = await res.json();
+        const data = payload.data || payload; // support both {data:{...}} or flat JSON
+
+        document.querySelectorAll('[data-key]').forEach(node=>{
+          const key = node.getAttribute('data-key');
+          if(!(key in data)) return;
+
+          const value = String(data[key]).replace(/\n/g,'<br>');
+          if(node.tagName === 'A' && /email/i.test(key)) {
+            node.textContent = data[key];
+            node.href = `mailto:${data[key]}`;
+          } else {
+            node.innerHTML = value;
+          }
+        });
+      } catch (err) {
+        console.error('Failed to load content', err);
       }
-      const data = await res.json();
-
-      // Fill nodes with data-key="sheet_key"
-      document.querySelectorAll('[data-key]').forEach(node=>{
-        const key = node.getAttribute('data-key');
-        if(!(key in data)) return;
-
-        // allow multi-line cells in Sheets using \n
-        const value = String(data[key]).replace(/\n/g,'<br>');
-        if(node.tagName === 'A' && /email/i.test(key)) {
-          node.textContent = data[key];
-          node.href = `mailto:${data[key]}`;
-        } else {
-          node.innerHTML = value;
-        }
-      });
     }
-    loadContent().catch(console.error);
+    loadContent();
   </script>
 </body>
 </html>
