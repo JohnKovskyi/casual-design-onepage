@@ -9,12 +9,14 @@
     *{box-sizing:border-box} html{scroll-behavior:smooth}
     body{margin:0;color:#111;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial}
     a{color:inherit}
+
     /* Sections */
     section{padding:80px 16px;border-bottom:1px solid #eee}
     section[id]{scroll-margin-top:var(--header-h)}
     section > :first-child{margin-top:0}
     h1,h2,h3{margin:0 0 12px}
     p{margin:0 0 10px}
+
     /* Header / nav */
     .site-header{
       position:sticky; top:0; z-index:1000; background:#fff; border-bottom:1px solid #eee;
@@ -36,12 +38,23 @@
       .nav-toggle{display:none}
       section[id]{scroll-margin-top:var(--header-h-lg)}
     }
+
     /* Simple card blocks */
     .card{border:1px solid #111; padding:18px; margin:18px 0}
     .muted{color:#666}
     input,textarea,button{font:inherit}
     input,textarea{width:100%; padding:10px; border:1px solid #bbb; border-radius:4px}
     button{padding:10px 16px; border:1px solid #111; background:#111; color:#fff; border-radius:6px; cursor:pointer}
+
+    /* Media */
+    .media { display:grid; gap:16px; align-items:start }
+    .media img { width:100%; height:auto; display:block; border:1px solid #eee; border-radius:6px }
+    @media (min-width:900px){
+      .media--2col { grid-template-columns: 1.2fr 1fr; }
+      .media--rev  { grid-template-columns: 1fr 1.2fr; }
+    }
+    /* Optional hero background hook (if you prefer bg instead of <img>) */
+    .bg-cover{ background-size:cover; background-position:center; background-repeat:no-repeat; }
   </style>
 </head>
 <body id="top">
@@ -49,25 +62,41 @@
   <!-- Header -->
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Home">
-      <img src="/logo.svg" alt="Casual Design" />
+      <!-- fallback src is local; replaced by data-key value from Sheets -->
+      <img data-key="logo_url" src="/logo.svg" alt="Casual Design" loading="eager" />
     </a>
     <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
       <span class="bar"></span><span class="bar"></span><span class="bar"></span>
     </button>
     <nav class="nav" id="site-nav">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#contact">Contact</a>
+      <a href="#home"     data-key="nav_home">Home</a>
+      <a href="#about"    data-key="nav_about">About</a>
+      <a href="#services" data-key="nav_services">Services</a>
+      <a href="#contact"  data-key="nav_contact">Contact</a>
     </nav>
   </header>
 
   <!-- Home / Hero -->
   <section id="home">
-    <h1 data-key="hero_title">2D &amp; 3D Drafting</h1>
-    <p class="muted" data-key="hero_desc">
-      Architecture &amp; interiors, tailored with a quiet logic…
-    </p>
+    <div class="media media--2col">
+      <div>
+        <h1 class="hero-title" data-key="hero_title">2D &amp; 3D Drafting</h1>
+        <p class="muted" data-key="hero_desc">
+          Architecture &amp; interiors, tailored with a quiet logic…
+        </p>
+      </div>
+      <div>
+        <!-- Hero image controlled by Sheets -->
+        <img
+          data-key="hero_img_url"
+          src=""
+          alt=""
+          data-alt="hero_img_alt"
+          loading="lazy"
+          decoding="async"
+          />
+      </div>
+    </div>
   </section>
 
   <!-- About -->
@@ -86,16 +115,43 @@
     <h2 data-key="services_title">Services</h2>
     <p class="muted" data-key="services_sub">Modular scope. Fixed deliverables…</p>
 
-    <div class="card">
-      <h3 data-key="svc1_title">Concept &amp; Feasibility</h3>
-      <p data-key="svc1_body">Briefing, code scan, site study…</p>
+    <!-- Service 1 -->
+    <div class="media media--2col card">
+      <div>
+        <h3 data-key="svc1_title">Concept &amp; Feasibility</h3>
+        <p data-key="svc1_body">Briefing, code scan, site study…</p>
+      </div>
+      <div>
+        <img
+          data-key="svc1_img_url"
+          src=""
+          alt=""
+          data-alt="svc1_img_alt"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
     </div>
 
-    <div class="card">
-      <h3 data-key="svc2_title">Design &amp; Visualization</h3>
-      <p data-key="svc2_body">Detailed drawings, coordination…</p>
+    <!-- Service 2 -->
+    <div class="media media--rev card">
+      <div>
+        <img
+          data-key="svc2_img_url"
+          src=""
+          alt=""
+          data-alt="svc2_img_alt"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div>
+        <h3 data-key="svc2_title">Design &amp; Visualization</h3>
+        <p data-key="svc2_body">Detailed drawings, coordination…</p>
+      </div>
     </div>
-    <!-- Add more blocks if you add keys like svc3_title, svc3_body, etc. -->
+
+    <!-- You can duplicate blocks for svc3, svc4... and add svc3_img_url, svc3_img_alt, etc. -->
   </section>
 
   <!-- Contact -->
@@ -104,10 +160,16 @@
     <p><a href="mailto:info@casual-design.com" data-key="contact_email">info@casual-design.com</a></p>
 
     <div class="card">
-      <label>Your name<br><input type="text" name="name"></label><br><br>
-      <label>Your email<br><input type="email" name="email"></label><br><br>
-      <label>Message<br><textarea name="message" rows="5"></textarea></label><br><br>
-      <button type="button">Send</button>
+      <label data-key="label_name">Your name</label>
+      <input type="text" name="name"><br><br>
+
+      <label data-key="label_email">Your email</label>
+      <input type="email" name="email"><br><br>
+
+      <label data-key="label_msg">Message</label>
+      <textarea name="message" rows="5"></textarea><br><br>
+
+      <button type="button" data-key="btn_send">Send</button>
     </div>
   </section>
 
@@ -126,36 +188,55 @@
     links.forEach(a => a.addEventListener('click', () => toggleMenu(false)));
 
     // Active link highlight
-    const sections = links
-      .map(a => document.querySelector(a.getAttribute('href')))
-      .filter(Boolean);
+    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
     const obs = new IntersectionObserver(entries => {
-      const vis = entries.filter(e=>e.isIntersecting)
-                         .sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+      const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
       if(!vis) return;
       links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${vis.target.id}`));
     }, {rootMargin:"-40% 0px -55% 0px", threshold:[0,0.25,0.5,0.75,1]});
     sections.forEach(el => obs.observe(el));
 
-    // ---------- Google Sheets content via Vercel API ----------
+    // ---------- Load content from Google Sheets via /api/content ----------
     async function loadContent(){
       try {
         const res = await fetch('/api/content?ts=' + Date.now()); // cache-bust
         const payload = await res.json();
-        const data = payload.data || payload; // support both {data:{...}} or flat JSON
+        const data = payload.data || payload; // support {data:{...}} or flat JSON
 
         document.querySelectorAll('[data-key]').forEach(node=>{
           const key = node.getAttribute('data-key');
           if(!(key in data)) return;
 
-          const value = String(data[key]).replace(/\n/g,'<br>');
-          if(node.tagName === 'A' && /email/i.test(key)) {
-            node.textContent = data[key];
-            node.href = `mailto:${data[key]}`;
+          const raw = String(data[key] ?? '');
+
+          // Special handling per element type
+          if (node.tagName === 'A' && /email/i.test(key)) {
+            node.textContent = raw;
+            node.href = `mailto:${raw}`;
+          } else if (node.tagName === 'IMG') {
+            // src URL from Sheets
+            if (raw) node.src = raw;
+            // optional alt from another key (data-alt="hero_img_alt")
+            const altKey = node.getAttribute('data-alt');
+            if (altKey && (altKey in data)) node.alt = String(data[altKey]);
+          } else if (node.matches('input')) {
+            node.value = raw;
+          } else if (node.matches('textarea')) {
+            node.value = raw;
           } else {
-            node.innerHTML = value;
+            node.innerHTML = raw.replace(/\n/g,'<br>');
           }
         });
+
+        // Optional: background-image hooks (elements that have data-bg="some_key")
+        document.querySelectorAll('[data-bg]').forEach(el=>{
+          const k = el.getAttribute('data-bg');
+          if (k in data && data[k]) {
+            el.style.backgroundImage = `url("${data[k]}")`;
+            el.classList.add('bg-cover');
+          }
+        });
+
       } catch (err) {
         console.error('Failed to load content', err);
       }
