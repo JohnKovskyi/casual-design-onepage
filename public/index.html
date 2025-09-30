@@ -1,245 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Casual Design</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    /* ---------- Root theme variables ---------- */
-    :root {
+    :root{
+      /* Page theme */
       --bg: #ffffff;
       --fg: #111111;
-      --border: #eaeaea;
+      --muted: #666666;
+      --border: #e9e6df;
 
-      --header-bg: #ffffff;
-      --header-fg: #111111;
-      --header-border: #eaeaea;
-
-      --form-bg: #ffffff;
-      --form-fg: #111111;
-      --form-border: #e6e6e6;
-
-      --header-h: 64px;
+      /* UI (header + contact fields) — can be overridden by ui_color from Sheets */
+      --ui-bg: #ffffff;
+      --ui-fg: #111111;
+      --ui-border: #eaeaea;
     }
 
-    body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--fg);
+    html{scroll-behavior:smooth}
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--fg);
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    }
+    a{color:inherit;text-decoration:none}
+
+    /* ===== Sticky header (contains hero on desktop) ===== */
+    .site-header{
+      position:sticky; top:0; z-index:1000;
+      background:var(--ui-bg);
+      color:var(--ui-fg);
+      border-bottom:1px solid var(--ui-border);
+      padding:12px 16px;
+    }
+    .header-grid{
+      display:grid; gap:16px; align-items:center;
+      grid-template-columns: 1.1fr 1fr;
+      max-width:1200px; margin:0 auto;
     }
 
-    /* ---------- Header ---------- */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: var(--header-bg);
-      color: var(--header-fg);
-      border-bottom: 1px solid var(--header-border);
-      height: var(--header-h);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 8px 16px;
+    .toprow{
+      grid-column:1 / -1;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
     }
-    .nav a {
-      color: var(--header-fg);
-      text-decoration: none;
-      margin-left: 1em;
+    .brand img{height:46px; width:auto; display:block}
+    .nav{display:flex; gap:28px; flex-wrap:wrap}
+    .nav a{color:var(--ui-fg); font-weight:700}
+    .nav a.active{border-bottom:3px solid var(--ui-fg)}
+
+    .header-copy h1{margin:0 0 8px; font-size:clamp(26px, 3vw, 42px); color:var(--ui-fg)}
+    .header-copy p{margin:0; color:var(--muted)}
+
+    /* Desktop hero (in header) */
+    .hero-in-header{
+      width:100%;
+      height:240px;
+      object-fit:cover;
+      border-radius:8px;
+      border:1px solid var(--ui-border);
+      display:block;
     }
-    .nav a.active {
-      border-bottom: 3px solid var(--header-fg);
-    }
-    .nav-toggle .bar {
-      display: block;
-      width: 24px;
-      height: 3px;
-      margin: 5px auto;
-      background: var(--header-fg);
+    /* Mobile hero (replaces desktop hero on small screens) */
+    .hero-in-header-mobile{
+      display:none;
+      width:100%;
+      height:140px;
+      object-fit:cover;
+      border-radius:8px;
+      border:1px solid var(--ui-border);
     }
 
-    /* ---------- Hero strip ---------- */
-    .hero-strip {
-      background: #fff;
-      border-bottom: 1px solid #eaeaea;
-      padding: 24px 16px 16px;
+    /* ===== Sections ===== */
+    section{padding:48px 16px; border-bottom:1px solid var(--border)}
+    .container{max-width:1200px; margin:0 auto}
+    .card{border:1px solid var(--fg); padding:18px; border-radius:4px; margin:16px 0}
+    .muted{color:var(--muted)}
+
+    /* ===== Services with images ===== */
+    .media{display:grid; gap:16px; align-items:start}
+    .media--2col{grid-template-columns:1.2fr 1fr}
+    .media--rev {grid-template-columns:1fr 1.2fr}
+    .service-img{width:100%; height:auto; border:1px solid var(--border); border-radius:8px}
+
+    /* ===== Contact form uses UI colors (from ui_color) ===== */
+    input,textarea,button{font:inherit}
+    input,textarea{
+      width:100%; padding:12px 14px; border-radius:8px; outline:none;
+      background:var(--ui-bg); color:var(--ui-fg); border:1px solid var(--ui-border);
+    }
+    input:focus, textarea:focus{border-color:#c9c9c9; box-shadow:0 0 0 2px rgba(0,0,0,.03)}
+    input:-webkit-autofill, textarea:-webkit-autofill{
+      -webkit-box-shadow:0 0 0 30px var(--ui-bg) inset !important;
+      -webkit-text-fill-color:var(--ui-fg) !important;
+    }
+    button{
+      padding:12px 18px; border:1px solid var(--ui-fg);
+      background:var(--ui-fg); color:#fff; border-radius:10px; font-weight:700; cursor:pointer;
     }
 
-    /* ---------- Sections ---------- */
-    section {
-      padding: 40px 20px;
-    }
-
-    /* ---------- Contact form ---------- */
-    input,
-    textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 6px;
-      outline: none;
-      background: var(--form-bg);
-      color: var(--form-fg);
-      border: 1px solid var(--form-border);
-      font-size: 16px;
-    }
-    input:focus,
-    textarea:focus {
-      border-color: #c9c9c9;
-      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.03);
-    }
-    input:-webkit-autofill,
-    textarea:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 30px var(--form-bg) inset !important;
-      -webkit-text-fill-color: var(--form-fg) !important;
-    }
-
-    button {
-      background: var(--header-fg);
-      color: #fff;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+    /* ===== Mobile ===== */
+    @media (max-width:880px){
+      .header-grid{grid-template-columns:1fr}
+      .hero-in-header{display:none}          /* hide desktop hero on mobile */
+      .hero-in-header-mobile{display:block}  /* show mobile hero */
     }
   </style>
 </head>
-<body>
-  <!-- ---------- Header ---------- -->
+<body id="top">
+  <!-- ===== Sticky header (desktop hero inside) ===== -->
   <header class="site-header">
-    <div class="logo">
-      <img id="logo" src="" alt="Logo" height="40">
+    <div class="header-grid">
+      <div class="toprow">
+        <a class="brand" href="#home" aria-label="Home">
+          <img id="logo" src="/logo.svg" alt="Casual Design" />
+        </a>
+        <nav class="nav" id="site-nav">
+          <a href="#home"     data-key="nav_home">HOME</a>
+          <a href="#about"    data-key="nav_about">ABOUT</a>
+          <a href="#services" data-key="nav_services">SERVICES</a>
+          <a href="#contact"  data-key="nav_contact">CONTACT</a>
+        </nav>
+      </div>
+
+      <div class="header-copy">
+        <h1 data-key="hero_title">2D &amp; 3D Drafting</h1>
+        <p class="muted" data-key="hero_desc">Architecture &amp; interiors, tailored with a quiet logic…</p>
+      </div>
+
+      <!-- Desktop hero (hidden on mobile) -->
+      <div>
+        <img id="hero_img" class="hero-in-header" src="" alt="" data-alt="hero_img_alt" loading="lazy" decoding="async">
+      </div>
+
+      <!-- Mobile hero (only visible on mobile) -->
+      <div>
+        <img id="hero_img_mobile" class="hero-in-header-mobile" src="" alt="" data-alt="hero_mobile_alt" loading="lazy" decoding="async">
+      </div>
     </div>
-    <nav class="nav">
-      <a href="#home" id="nav_home">HOME</a>
-      <a href="#about" id="nav_about">ABOUT</a>
-      <a href="#services" id="nav_services">SERVICES</a>
-      <a href="#contact" id="nav_contact">CONTACT</a>
-    </nav>
   </header>
 
-  <!-- ---------- Hero ---------- -->
-  <section id="home" class="hero-strip">
-    <h1 id="hero_title"></h1>
-    <p id="hero_desc"></p>
-    <img id="hero_img" src="" alt="" style="max-width:100%; border-radius:8px;">
-  </section>
-
-  <!-- ---------- About ---------- -->
+  <!-- ===== About ===== -->
   <section id="about">
-    <h2 id="about_title"></h2>
-    <p id="about_sub"></p>
-    <p id="about_body"></p>
+    <div class="container">
+      <div class="card">
+        <h2 data-key="about_title">About Casual Design</h2>
+        <p class="muted" data-key="about_sub">Design that feels effortless…</p>
+        <p data-key="about_body">We help homeowners and developers make clear decisions—fast…</p>
+      </div>
+    </div>
   </section>
 
-  <!-- ---------- Services ---------- -->
+  <!-- ===== Services ===== -->
   <section id="services">
-    <h2 id="services_title"></h2>
-    <p id="services_sub"></p>
+    <div class="container">
+      <h2 data-key="services_title">Services</h2>
+      <p class="muted" data-key="services_sub">Modular scope. Fixed deliverables. Transparent fees.</p>
+
+      <div class="media media--2col card">
+        <div>
+          <h3 data-key="svc1_title">Concept &amp; Feasibility</h3>
+          <p data-key="svc1_body">Briefing, code scan, site study, options…</p>
+        </div>
+        <div>
+          <img id="svc1_img" class="service-img" src="" alt="" data-alt="svc1_img_alt" loading="lazy" decoding="async">
+        </div>
+      </div>
+
+      <div class="media media--rev card">
+        <div>
+          <img id="svc2_img" class="service-img" src="" alt="" data-alt="svc2_img_alt" loading="lazy" decoding="async">
+        </div>
+        <div>
+          <h3 data-key="svc2_title">Design &amp; Visualization</h3>
+          <p data-key="svc2_body">Detailed drawings, coordination, presentation.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- ---------- Contact ---------- -->
+  <!-- ===== Contact ===== -->
   <section id="contact">
-    <h2 id="contact_title">Contact</h2>
-    <p><a id="contact_email" href="mailto:info@casual-design.com">info@casual-design.com</a></p>
-    <form>
-      <label id="label_name"></label>
-      <input type="text" name="name">
-      <label id="label_email"></label>
-      <input type="email" name="email">
-      <label id="label_msg"></label>
-      <textarea name="message"></textarea>
-      <button type="submit" id="btn_send"></button>
-    </form>
+    <div class="container">
+      <h2 data-key="contact_title">Contact</h2>
+      <p><a href="mailto:info@casual-design.com" data-key="contact_email">info@casual-design.com</a></p>
+
+    <div class="card">
+      <label data-key="label_name">Your name</label>
+      <input type="text" name="name"><br><br>
+
+      <label data-key="label_email">Email</label>
+      <input type="email" name="email"><br><br>
+
+      <label data-key="label_msg">Message</label>
+      <textarea name="message" rows="8"></textarea><br><br>
+
+      <button type="button" data-key="btn_send">Send message</button>
+    </div>
+    </div>
   </section>
 
   <script>
-    async function loadContent() {
-      try {
-        const res = await fetch('/api/content');
-        const json = await res.json();
-        const data = json.data || {};
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+    function setVar(n,v){ document.documentElement.style.setProperty(n,v); }
 
-        // --- Hero ---
-        document.getElementById('hero_title').textContent = data.hero_title || '';
-        document.getElementById('hero_desc').textContent = data.hero_desc || '';
-        if (data.hero_img_url) {
-          document.getElementById('hero_img').src = data.hero_img_url;
-        }
-
-        // --- About ---
-        document.getElementById('about_title').textContent = data.about_title || '';
-        document.getElementById('about_sub').textContent = data.about_sub || '';
-        document.getElementById('about_body').textContent = data.about_body || '';
-
-        // --- Services ---
-        document.getElementById('services_title').textContent = data.services_title || '';
-        document.getElementById('services_sub').textContent = data.services_sub || '';
-
-        // --- Contact ---
-        document.getElementById('contact_title').textContent = data.contact_title || 'Contact';
-        document.getElementById('contact_email').textContent = data.contact_email || 'info@casual-design.com';
-        document.getElementById('contact_email').href = `mailto:${data.contact_email || 'info@casual-design.com'}`;
-        document.getElementById('label_name').textContent = data.label_name || 'YOUR NAME';
-        document.getElementById('label_email').textContent = data.label_email || 'EMAIL';
-        document.getElementById('label_msg').textContent = data.label_msg || 'MESSAGE';
-        document.getElementById('btn_send').textContent = data.btn_send || 'SEND MESSAGE';
-
-        // --- Logo ---
-        if (data.logo_url) {
-          document.getElementById('logo').src = data.logo_url;
-        }
-
-        // --- Colors & themes ---
-        if (data.bg_color) {
-          document.documentElement.style.setProperty('--bg', data.bg_color);
-        }
-        if (data.theme_mode === 'inverted') {
-          document.documentElement.style.setProperty('--fg', '#ffffff');
-          document.documentElement.style.setProperty('--border', '#444444');
-        } else {
-          document.documentElement.style.setProperty('--fg', '#111111');
-          document.documentElement.style.setProperty('--border', '#eaeaea');
-        }
-
-        // --- Row 56: ui_white toggle ---
-        (function applyUiWhite() {
-          const uiWhite = String(data.ui_white || 'white').trim().toLowerCase();
-
-          if (uiWhite === 'white') {
-            // Header always white
-            document.documentElement.style.setProperty('--header-bg', '#ffffff');
-            document.documentElement.style.setProperty('--header-fg', '#111111');
-            document.documentElement.style.setProperty('--header-border', '#eaeaea');
-
-            // Contact fields always white
-            document.documentElement.style.setProperty('--form-bg', '#ffffff');
-            document.documentElement.style.setProperty('--form-fg', '#111111');
-            document.documentElement.style.setProperty('--form-border', '#e6e6e6');
-          } else {
-            // AUTO: header + fields follow theme
-            const rs = getComputedStyle(document.documentElement);
-            const bg = rs.getPropertyValue('--bg').trim() || '#ffffff';
-            const fg = rs.getPropertyValue('--fg').trim() || '#111111';
-            const border = rs.getPropertyValue('--border').trim() || '#eaeaea';
-
-            document.documentElement.style.setProperty('--header-bg', bg);
-            document.documentElement.style.setProperty('--header-fg', fg);
-            document.documentElement.style.setProperty('--header-border', border);
-
-            document.documentElement.style.setProperty('--form-bg', bg);
-            document.documentElement.style.setProperty('--form-fg', fg);
-            document.documentElement.style.setProperty('--form-border', border);
-          }
-        })();
-
-      } catch (err) {
-        console.error('Error loading content:', err);
-      }
+    // Choose black/white for contrast against a background color
+    function pickContrast(color){
+      const tmp = document.createElement('div');
+      tmp.style.color = color; document.body.appendChild(tmp);
+      const rgb = getComputedStyle(tmp).color; document.body.removeChild(tmp);
+      const m = rgb.match(/(\d+)\D+(\d+)\D+(\d+)/);
+      if(!m) return '#111111';
+      const [r,g,b] = [m[1],m[2],m[3]].map(Number);
+      const srgb = [r,g,b].map(v=>v/255).map(v=>v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
+      const L = 0.2126*srgb[0] + 0.7152*srgb[1] + 0.0722*srgb[2];
+      return L > 0.58 ? '#111111' : '#ffffff';
     }
 
+    async function loadContent(){
+      try{
+        const res = await fetch('/api/content?ts=' + Date.now());
+        const payload = await res.json();
+        const data = payload.data || payload;
+
+        // Fill text & links
+        $$('[data-key]').forEach(node=>{
+          const key = node.getAttribute('data-key');
+          if (!(key in data)) return;
+          if (node.tagName === 'A' && /email/i.test(key)){
+            node.textContent = data[key]; node.href = 'mailto:' + data[key];
+          } else if (node.tagName === 'IMG'){
+            if (data[key]) node.src = data[key];
+            const altKey = node.getAttribute('data-alt');
+            if (altKey && altKey in data) node.alt = String(data[altKey] || '');
+          } else {
+            node.textContent = data[key];
+          }
+        });
+
+        // Explicitly map image keys (in case not using data-key on some)
+        if (data.logo_url) $('#logo').src = data.logo_url;
+        if (data.hero_img_url) $('#hero_img').src = data.hero_img_url;
+        if (data.hero_mobile_url) $('#hero_img_mobile').src = data.hero_mobile_url;
+        if (data.svc1_img_url) $('#svc1_img').src = data.svc1_img_url;
+        if (data.svc2_img_url) $('#svc2_img').src = data.svc2_img_url;
+
+        // Page theme
+        if (data.bg_color) setVar('--bg', String(data.bg_color));
+        if (String(data.theme_mode||'').toLowerCase() === 'inverted'){
+          setVar('--fg', '#f5f5f5'); setVar('--muted', '#bbbbbb'); setVar('--border', '#2a2a2a');
+        } else {
+          setVar('--fg', '#111111'); setVar('--muted', '#666666'); setVar('--border', '#e9e6df');
+        }
+
+        // Row 56: ui_color → header + contact fields (any CSS color)
+        const ui = String(data.ui_color || '').trim().toLowerCase();
+        if (ui && ui !== 'auto'){
+          const fg = pickContrast(ui);
+          setVar('--ui-bg', ui);
+          setVar('--ui-fg', fg);
+          setVar('--ui-border', (fg === '#ffffff') ? '#3a3a3a' : '#eaeaea');
+        } // else defaults stay white
+
+        // Active nav highlight on scroll
+        const navLinks = [...document.querySelectorAll('.nav a')];
+        const targets  = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+        const obs = new IntersectionObserver(entries=>{
+          const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+          if(!vis) return;
+          navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${vis.target.id}`));
+        }, {rootMargin:"-40% 0px -55% 0px", threshold:[0,0.25,0.5,0.75,1]});
+        targets.forEach(el => obs.observe(el));
+
+      }catch(e){ console.error('Failed to load content', e); }
+    }
     loadContent();
   </script>
 </body>
