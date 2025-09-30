@@ -2,118 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Casual Design</title>
-
   <style>
     :root{
-      /* Page theme */
       --bg:#ffffff; --fg:#111111; --muted:#666; --border:#e9e6df;
 
-      /* UI (header + contact fields) — overridable via ui_color in Sheets */
+      /* UI tint (header + contact fields). Overridden by ui_color from Sheets. */
       --ui-bg:#ffffff; --ui-fg:#111111; --ui-border:#eaeaea;
 
-      /* Logo/hero strip sizes */
-      --logo-h:56px;               /* header height = logo height */
+      /* Header measurements */
+      --logo-h:56px;            /* header height = logo height */
       --hero-radius:8px;
     }
-
     html{scroll-behavior:smooth}
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial}
     a{color:inherit;text-decoration:none}
 
-    /* ===== Header (single line) ===== */
-    .site-header{
-      position:sticky; top:0; z-index:1000;
-      background:var(--ui-bg); color:var(--ui-fg);
-      border-bottom:1px solid var(--ui-border);
-    }
+    /* ===== Header ===== */
+    .site-header{position:sticky;top:0;z-index:1000;background:var(--ui-bg);color:var(--ui-fg);border-bottom:1px solid var(--ui-border)}
     .header-row{
-      max-width:1200px; margin:0 auto; padding:8px 12px;
-      display:grid; gap:16px; align-items:center;
-      grid-template-columns: auto 1fr auto;   /* logo | hero strip | menu */
+      max-width:1200px;margin:0 auto;padding:8px 12px;
+      display:grid;gap:16px;align-items:center;
+      grid-template-columns:auto 1fr auto;     /* desktop: logo | hero | nav */
+      grid-template-areas:"brand hero nav";
       min-height:var(--logo-h);
     }
-    .brand img{height:var(--logo-h); width:auto; display:block}
+    .brand{grid-area:brand;justify-self:start}
+    .brand img{height:var(--logo-h);width:auto;display:block}
 
     .hero-strip{
-      height:var(--logo-h);
-      width:100%;
-      object-fit:cover;
-      display:block;
-      border-radius:var(--hero-radius);
-      border:1px solid var(--ui-border);
+      grid-area:hero;height:var(--logo-h);width:100%;object-fit:cover;display:block;
+      border-radius:var(--hero-radius);border:1px solid var(--ui-border)
     }
-
-    .nav{display:flex; gap:26px; flex-wrap:wrap; align-items:center}
-    .nav a{color:var(--ui-fg); font-weight:700; line-height:1}
+    .nav{grid-area:nav;display:flex;gap:26px;flex-wrap:wrap;align-items:center}
+    .nav a{color:var(--ui-fg);font-weight:700;line-height:1}
     .nav a.active{border-bottom:3px solid var(--ui-fg)}
 
-    /* ===== Headline just under header ===== */
-    .headline{padding:18px 12px 8px}
-    .headline .wrap{max-width:900px; margin:0 auto; text-align:center}
-    .headline h1{
-      margin:0 0 8px;
-      /* ~3× smaller than before */
-      font-size:clamp(14px, 1.6vw, 20px);
-      letter-spacing:.2px;
+    /* Hamburger button (hidden on desktop) */
+    .menu-toggle{
+      display:none;grid-area:menu;align-items:center;justify-content:center;
+      width:44px;height:44px;border:1px solid var(--ui-border);border-radius:10px;
+      background:var(--ui-bg);cursor:pointer
     }
-    .headline p{margin:0; color:var(--muted); max-width:820px; margin-inline:auto}
+    .menu-toggle:focus{outline:2px solid #999;outline-offset:2px}
+    .menu-toggle .bar{width:20px;height:2px;background:var(--ui-fg);margin:3px 0;border-radius:2px;display:block}
 
-    /* ===== Sections (unchanged) ===== */
-    section{padding:36px 16px; border-bottom:1px solid var(--border)}
-    .container{max-width:1200px; margin:0 auto}
-    .card{border:1px solid var(--fg); padding:18px; border-radius:4px; margin:16px 0}
+    /* Mobile drop-down menu */
+    .mobile-menu{
+      display:none;position:absolute;left:0;right:0;top:100%;
+      background:var(--ui-bg);border-bottom:1px solid var(--ui-border);
+    }
+    .mobile-menu.open{display:block}
+    .mobile-menu .mm-row{max-width:1200px;margin:0 auto;padding:8px 12px;display:flex;gap:18px;flex-wrap:wrap}
+    .mobile-menu a{font-weight:700;padding:8px 6px;border-radius:6px}
+    .mobile-menu a.active{border-bottom:3px solid var(--ui-fg)}
+
+    /* ===== Headline beneath header ===== */
+    .headline{padding:18px 12px 8px}
+    .headline .wrap{max-width:900px;margin:0 auto;text-align:center}
+    .headline h1{margin:0 0 8px;font-size:clamp(14px,1.6vw,20px);letter-spacing:.2px}
+    .headline p{margin:0;color:var(--muted);max-width:820px;margin-inline:auto}
+
+    /* ===== Sections ===== */
+    section{padding:36px 16px;border-bottom:1px solid var(--border)}
+    .container{max-width:1200px;margin:0 auto}
+    .card{border:1px solid var(--fg);padding:18px;border-radius:4px;margin:16px 0}
     .muted{color:var(--muted)}
 
-    /* Services layout */
-    .media{display:grid; gap:16px; align-items:start}
+    .media{display:grid;gap:16px;align-items:start}
     .media--2col{grid-template-columns:1.2fr 1fr}
     .media--rev {grid-template-columns:1fr 1.2fr}
-    .service-img{width:100%; height:auto; border:1px solid var(--border); border-radius:8px}
+    .service-img{width:100%;height:auto;border:1px solid var(--border);border-radius:8px}
 
-    /* Contact fields use UI colors */
+    /* Contact UI = header tint */
     input,textarea,button{font:inherit}
-    input,textarea{
-      width:100%; padding:12px 14px; border-radius:8px; outline:none;
-      background:var(--ui-bg); color:var(--ui-fg); border:1px solid var(--ui-border);
-    }
-    input:focus, textarea:focus{border-color:#c9c9c9; box-shadow:0 0 0 2px rgba(0,0,0,.03)}
-    input:-webkit-autofill, textarea:-webkit-autofill{
-      -webkit-box-shadow:0 0 0 30px var(--ui-bg) inset !important;
-      -webkit-text-fill-color:var(--ui-fg) !important;
-    }
-    button{
-      padding:12px 18px; border:1px solid var(--ui-fg);
-      background:var(--ui-fg); color:#fff; border-radius:10px; font-weight:700; cursor:pointer;
-    }
+    input,textarea{width:100%;padding:12px 14px;border-radius:8px;outline:none;background:var(--ui-bg);color:var(--ui-fg);border:1px solid var(--ui-border)}
+    input:focus,textarea:focus{border-color:#c9c9c9;box-shadow:0 0 0 2px rgba(0,0,0,.03)}
+    input:-webkit-autofill,textarea:-webkit-autofill{-webkit-box-shadow:0 0 0 30px var(--ui-bg) inset!important;-webkit-text-fill-color:var(--ui-fg)!important}
+    button{padding:12px 18px;border:1px solid var(--ui-fg);background:var(--ui-fg);color:#fff;border-radius:10px;font-weight:700;cursor:pointer}
 
-    /* ===== Mobile ===== */
-    .hero-mobile{display:none; padding:8px 12px}
-    .hero-mobile img{
-      width:100%; height:140px; object-fit:cover;
-      border-radius:var(--hero-radius); border:1px solid var(--ui-border);
-    }
+    /* Mobile hero image */
+    .hero-mobile{display:none;padding:8px 12px}
+    .hero-mobile img{width:100%;height:140px;object-fit:cover;border-radius:var(--hero-radius);border:1px solid var(--ui-border)}
 
+    /* ===== Mobile (≤880px) ===== */
     @media (max-width:880px){
-      /* Hide desktop hero strip; keep header compact */
+      /* Swap layout: hamburger LEFT, logo RIGHT; hide desktop hero; show mobile hero */
+      .header-row{
+        grid-template-columns:auto 1fr;      /* menu | brand */
+        grid-template-areas:"menu brand";
+      }
+      .menu-toggle{display:flex}
+      .brand{justify-self:end}
       .hero-strip{display:none}
+
+      /* Hide inline nav; use the dropdown instead */
+      .nav{display:none}
       .hero-mobile{display:block}
     }
   </style>
 </head>
 <body id="top">
-  <!-- ===== Header row: logo | hero strip | menu ===== -->
   <header class="site-header">
     <div class="header-row">
+      <!-- Hamburger (mobile only) -->
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+
+      <!-- Brand / Logo -->
       <a class="brand" href="#home" aria-label="Home">
-        <img id="logo" src="/logo.svg" alt="Casual Design">
+        <img id="logo" src="/logo.svg" alt="Casual Design" />
       </a>
 
-      <!-- Desktop hero strip (same height as logo) -->
+      <!-- Desktop hero strip (hidden on mobile) -->
       <img id="hero_img" class="hero-strip" src="" alt="" data-alt="hero_img_alt" loading="lazy" decoding="async" />
 
+      <!-- Inline nav (desktop only) -->
       <nav class="nav" id="site-nav">
         <a href="#home"     data-key="nav_home">HOME</a>
         <a href="#about"    data-key="nav_about">ABOUT</a>
@@ -121,14 +128,24 @@
         <a href="#contact"  data-key="nav_contact">CONTACT</a>
       </nav>
     </div>
+
+    <!-- Mobile dropdown menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mm-row">
+        <a href="#home"     data-key="nav_home">HOME</a>
+        <a href="#about"    data-key="nav_about">ABOUT</a>
+        <a href="#services" data-key="nav_services">SERVICES</a>
+        <a href="#contact"  data-key="nav_contact">CONTACT</a>
+      </div>
+    </div>
   </header>
 
-  <!-- Mobile hero (visible only on mobile) -->
+  <!-- Mobile hero, appears under header on phones -->
   <div class="hero-mobile">
     <img id="hero_img_mobile" src="" alt="" data-alt="hero_mobile_alt" loading="lazy" decoding="async" />
   </div>
 
-  <!-- ===== Headline area ===== -->
+  <!-- Headline -->
   <section class="headline" id="home">
     <div class="wrap">
       <h1 data-key="hero_title">2D &amp; 3D Drafting</h1>
@@ -139,7 +156,7 @@
     </div>
   </section>
 
-  <!-- ===== About ===== -->
+  <!-- About -->
   <section id="about">
     <div class="container">
       <div class="card">
@@ -150,7 +167,7 @@
     </div>
   </section>
 
-  <!-- ===== Services ===== -->
+  <!-- Services -->
   <section id="services">
     <div class="container">
       <h2 data-key="services_title">Services</h2>
@@ -178,7 +195,7 @@
     </div>
   </section>
 
-  <!-- ===== Contact ===== -->
+  <!-- Contact -->
   <section id="contact">
     <div class="container">
       <h2 data-key="contact_title">Contact</h2>
@@ -200,22 +217,32 @@
   </section>
 
   <script>
-    const $ = s => document.querySelector(s);
-    const $$ = s => document.querySelectorAll(s);
-    function setVar(n,v){ document.documentElement.style.setProperty(n,v); }
+    const $ = s=>document.querySelector(s);
+    const $$ = s=>document.querySelectorAll(s);
+    function setVar(n,v){document.documentElement.style.setProperty(n,v);}
 
-    // pick black/white for contrast against a color
+    // Contrast helper for ui_color
     function pickContrast(color){
-      const tmp = document.createElement('div');
-      tmp.style.color = color; document.body.appendChild(tmp);
-      const rgb = getComputedStyle(tmp).color; document.body.removeChild(tmp);
-      const m = rgb.match(/(\d+)\D+(\d+)\D+(\d+)/);
-      if(!m) return '#111111';
-      const [r,g,b] = [m[1],m[2],m[3]].map(Number);
-      const toLin = v=>{v/=255; return v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4);}
-      const L = 0.2126*toLin(r)+0.7152*toLin(g)+0.0722*toLin(b);
+      const tmp=document.createElement('div'); tmp.style.color=color; document.body.appendChild(tmp);
+      const rgb=getComputedStyle(tmp).color; document.body.removeChild(tmp);
+      const m=rgb.match(/(\d+)\D+(\d+)\D+(\d+)/); if(!m) return '#111111';
+      const [r,g,b]=[m[1],m[2],m[3]].map(Number);
+      const lin=v=>{v/=255; return v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4);}
+      const L=0.2126*lin(r)+0.7152*lin(g)+0.0722*lin(b);
       return L>0.58?'#111111':'#ffffff';
     }
+
+    // Mobile menu toggle
+    const toggle = $('#menuToggle');
+    const mobileMenu = $('#mobileMenu');
+    toggle.addEventListener('click', ()=>{
+      const open = mobileMenu.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    // Close menu when a link is clicked (mobile)
+    mobileMenu.addEventListener('click', e=>{
+      if(e.target.tagName==='A'){ mobileMenu.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+    });
 
     async function loadContent(){
       try{
@@ -223,56 +250,68 @@
         const payload = await res.json();
         const data = payload.data || payload;
 
-        // Fill text & links
+        // Fill text from data-key
         $$('[data-key]').forEach(node=>{
           const key = node.getAttribute('data-key');
-          if (!(key in data)) return;
-          if (node.tagName === 'A' && /email/i.test(key)){
+          if(!(key in data)) return;
+          if(node.tagName==='A' && /email/i.test(key)){
             node.textContent = data[key]; node.href = 'mailto:'+data[key];
-          } else {
+          }else{
             node.textContent = data[key];
           }
         });
 
-        // Images from sheet
-        if (data.logo_url) $('#logo').src = data.logo_url;
-        if (data.hero_img_url) $('#hero_img').src = data.hero_img_url;
-        if (data.hero_img_alt) $('#hero_img').alt = data.hero_img_alt;
-        if (data.hero_mobile_url) $('#hero_img_mobile').src = data.hero_mobile_url;
-        if (data.hero_mobile_alt) $('#hero_img_mobile').alt = data.hero_mobile_alt;
-        if (data.svc1_img_url) $('#svc1_img').src = data.svc1_img_url;
-        if (data.svc1_img_alt) $('#svc1_img').alt = data.svc1_img_alt;
-        if (data.svc2_img_url) $('#svc2_img').src = data.svc2_img_url;
-        if (data.svc2_img_alt) $('#svc2_img').alt = data.svc2_img_alt;
+        // Images
+        if(data.logo_url) $('#logo').src = data.logo_url;
 
-        // Theme
-        if (data.bg_color) setVar('--bg', String(data.bg_color));
-        if (String(data.theme_mode||'').toLowerCase()==='inverted'){
+        if(data.hero_img_url){ $('#hero_img').src = data.hero_img_url; }
+        if(data.hero_img_alt){ $('#hero_img').alt = data.hero_img_alt; }
+
+        if(data.hero_mobile_url){ $('#hero_img_mobile').src = data.hero_mobile_url; }
+        if(data.hero_mobile_alt){ $('#hero_img_mobile').alt = data.hero_mobile_alt; }
+
+        if(data.svc1_img_url){ $('#svc1_img').src = data.svc1_img_url; }
+        if(data.svc1_img_alt){ $('#svc1_img').alt = data.svc1_img_alt; }
+
+        if(data.svc2_img_url){ $('#svc2_img').src = data.svc2_img_url; }
+        if(data.svc2_img_alt){ $('#svc2_img').alt = data.svc2_img_alt; }
+
+        // Page theme
+        if(data.bg_color) setVar('--bg', String(data.bg_color));
+        if(String(data.theme_mode||'').toLowerCase()==='inverted'){
           setVar('--fg','#f5f5f5'); setVar('--muted','#bbb'); setVar('--border','#2a2a2a');
-        } else {
+        }else{
           setVar('--fg','#111'); setVar('--muted','#666'); setVar('--border','#e9e6df');
         }
 
-        // Row 56 ui_color → header + contact fields (any CSS color)
+        // Header/inputs theme (row 56 ui_color – any CSS color)
         const ui = String(data.ui_color||'').trim().toLowerCase();
-        if (ui && ui!=='auto'){
+        if(ui && ui!=='auto'){
           const fg = pickContrast(ui);
           setVar('--ui-bg', ui);
           setVar('--ui-fg', fg);
-          setVar('--ui-border', (fg==='#ffffff') ? '#3a3a3a' : '#eaeaea');
+          setVar('--ui-border', (fg==='#fff') ? '#3a3a3a' : '#eaeaea');
         }
 
-        // Active nav on scroll
-        const navLinks = [...document.querySelectorAll('.nav a')];
-        const targets = navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+        // Active nav highlight (desktop + mobile lists)
+        const linkSets = [
+          ...document.querySelectorAll('.nav a'),
+          ...document.querySelectorAll('.mobile-menu a')
+        ];
+        const sections = linkSets
+          .filter((l,i,self)=>self.findIndex(x=>x.getAttribute('href')===l.getAttribute('href'))===i)
+          .map(a=>document.querySelector(a.getAttribute('href')))
+          .filter(Boolean);
+
         const obs = new IntersectionObserver(entries=>{
           const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
           if(!vis) return;
-          navLinks.forEach(l=>l.classList.toggle('active', l.getAttribute('href')===`#${vis.target.id}`));
-        }, {rootMargin:"-40% 0px -55% 0px", threshold:[0,0.25,0.5,0.75,1]});
-        targets.forEach(el=>obs.observe(el));
-
-      }catch(e){ console.error('content load failed', e); }
+          linkSets.forEach(l=>{
+            l.classList.toggle('active', l.getAttribute('href')===`#${vis.target.id}`);
+          });
+        }, {rootMargin:'-40% 0px -55% 0px', threshold:[0,0.25,0.5,0.75,1]});
+        sections.forEach(el=>obs.observe(el));
+      }catch(err){ console.error('content load failed', err); }
     }
     loadContent();
   </script>
