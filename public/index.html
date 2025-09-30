@@ -11,7 +11,6 @@
       /* Header + form tint (from Sheets: ui_color) */
       --ui-bg:#ffffff; --ui-fg:#111111; --ui-border:#eaeaea;
 
-      /* header / hero sizes */
       --logo-h:56px;
       --hero-radius:8px;
     }
@@ -41,30 +40,26 @@
     .nav a{color:var(--ui-fg);font-weight:700;line-height:1}
     .nav a.active{border-bottom:3px solid var(--ui-fg)}
 
-    /* ===== Hamburger (hidden on desktop) ===== */
+    /* ===== Hamburger (mobile only) ===== */
     .menu-toggle{
-      display:none;grid-area:menu;align-items:center;justify-content:center;
-      width:44px;height:44px;border:none;background:transparent;cursor:pointer;
-
-      /* Prevent any default icon/text (iOS/Android) */
-      -webkit-appearance:none;appearance:none;font-size:0;line-height:0;
+      display:none;               /* shown via media query */
+      grid-area:menu;
+      width:28px;height:20px;
       padding:0;margin:0;
+      background:none;border:none;cursor:pointer;
+      display:flex;flex-direction:column;justify-content:space-between;
     }
-    .menu-toggle:focus{outline:2px solid #999;outline-offset:2px}
     .menu-toggle .bar{
-      display:block;width:26px;height:3px;margin:4px auto;background:var(--ui-fg);border-radius:2px;
-      transition:transform .25s ease, opacity .2s ease;
+      width:100%;height:3px;background:var(--ui-fg);border-radius:2px;
+      transition:transform .25s ease,opacity .2s ease;
     }
-    /* Animated “X” state when open */
+    /* animated "X" when open */
     .menu-toggle.open .bar:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
     .menu-toggle.open .bar:nth-child(2){opacity:0}
     .menu-toggle.open .bar:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
 
     /* ===== Mobile drop-down ===== */
-    .mobile-menu{
-      display:none;position:absolute;left:0;right:0;top:100%;
-      background:var(--ui-bg);border-bottom:1px solid var(--ui-border);
-    }
+    .mobile-menu{display:none;position:absolute;left:0;right:0;top:100%;background:var(--ui-bg);border-bottom:1px solid var(--ui-border)}
     .mobile-menu.open{display:block}
     .mobile-menu .mm-row{max-width:1200px;margin:0 auto;padding:8px 12px;display:flex;gap:18px;flex-wrap:wrap}
     .mobile-menu a{font-weight:700;padding:8px 6px;border-radius:6px}
@@ -115,14 +110,14 @@
 <body id="top">
   <header class="site-header">
     <div class="header-row">
-      <!-- Hamburger (mobile only) -->
+      <!-- Hamburger (mobile only; left) -->
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
         <span class="bar" aria-hidden="true"></span>
         <span class="bar" aria-hidden="true"></span>
         <span class="bar" aria-hidden="true"></span>
       </button>
 
-      <!-- Brand / Logo -->
+      <!-- Brand / Logo (right on mobile) -->
       <a class="brand" href="#home" aria-label="Home">
         <img id="logo" src="/logo.svg" alt="Casual Design" />
       </a>
@@ -231,7 +226,7 @@
     const $$ = s=>document.querySelectorAll(s);
     function setVar(n,v){document.documentElement.style.setProperty(n,v);}
 
-    // Choose readable text color for given bg
+    // Choose readable text color for a bg
     function pickContrast(color){
       const tmp=document.createElement('div'); tmp.style.color=color; document.body.appendChild(tmp);
       const rgb=getComputedStyle(tmp).color; document.body.removeChild(tmp);
@@ -242,7 +237,7 @@
       return L>0.58?'#111111':'#ffffff';
     }
 
-    // Mobile menu toggle (keeps hamburger bars; no text anywhere)
+    // Mobile menu toggle
     const toggle = $('#menuToggle');
     const mobileMenu = $('#mobileMenu');
     toggle.addEventListener('click', ()=>{
