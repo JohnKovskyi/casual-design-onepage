@@ -8,85 +8,72 @@
   <style>
     :root{
       /* Page theme */
-      --bg: #ffffff;
-      --fg: #111111;
-      --muted: #666666;
-      --border: #e9e6df;
+      --bg:#ffffff; --fg:#111111; --muted:#666; --border:#e9e6df;
 
-      /* UI (header + contact fields) — can be overridden by ui_color from Sheets */
-      --ui-bg: #ffffff;
-      --ui-fg: #111111;
-      --ui-border: #eaeaea;
+      /* UI (header + contact fields) — overridable via ui_color in Sheets */
+      --ui-bg:#ffffff; --ui-fg:#111111; --ui-border:#eaeaea;
+
+      /* Logo/hero strip sizes */
+      --logo-h:56px;               /* header height = logo height */
+      --hero-radius:8px;
     }
 
     html{scroll-behavior:smooth}
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--fg);
-      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;
-    }
+    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial}
     a{color:inherit;text-decoration:none}
 
-    /* ===== Sticky header (contains hero on desktop) ===== */
+    /* ===== Header (single line) ===== */
     .site-header{
       position:sticky; top:0; z-index:1000;
-      background:var(--ui-bg);
-      color:var(--ui-fg);
+      background:var(--ui-bg); color:var(--ui-fg);
       border-bottom:1px solid var(--ui-border);
-      padding:12px 16px;
     }
-    .header-grid{
+    .header-row{
+      max-width:1200px; margin:0 auto; padding:8px 12px;
       display:grid; gap:16px; align-items:center;
-      grid-template-columns: 1.1fr 1fr;
-      max-width:1200px; margin:0 auto;
+      grid-template-columns: auto 1fr auto;   /* logo | hero strip | menu */
+      min-height:var(--logo-h);
+    }
+    .brand img{height:var(--logo-h); width:auto; display:block}
+
+    .hero-strip{
+      height:var(--logo-h);
+      width:100%;
+      object-fit:cover;
+      display:block;
+      border-radius:var(--hero-radius);
+      border:1px solid var(--ui-border);
     }
 
-    .toprow{
-      grid-column:1 / -1;
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
-    }
-    .brand img{height:46px; width:auto; display:block}
-    .nav{display:flex; gap:28px; flex-wrap:wrap}
-    .nav a{color:var(--ui-fg); font-weight:700}
+    .nav{display:flex; gap:26px; flex-wrap:wrap; align-items:center}
+    .nav a{color:var(--ui-fg); font-weight:700; line-height:1}
     .nav a.active{border-bottom:3px solid var(--ui-fg)}
 
-    .header-copy h1{margin:0 0 8px; font-size:clamp(26px, 3vw, 42px); color:var(--ui-fg)}
-    .header-copy p{margin:0; color:var(--muted)}
-
-    /* Desktop hero (in header) */
-    .hero-in-header{
-      width:100%;
-      height:240px;
-      object-fit:cover;
-      border-radius:8px;
-      border:1px solid var(--ui-border);
-      display:block;
+    /* ===== Headline just under header ===== */
+    .headline{padding:18px 12px 8px}
+    .headline .wrap{max-width:900px; margin:0 auto; text-align:center}
+    .headline h1{
+      margin:0 0 8px;
+      /* ~3× smaller than before */
+      font-size:clamp(14px, 1.6vw, 20px);
+      letter-spacing:.2px;
     }
-    /* Mobile hero (replaces desktop hero on small screens) */
-    .hero-in-header-mobile{
-      display:none;
-      width:100%;
-      height:140px;
-      object-fit:cover;
-      border-radius:8px;
-      border:1px solid var(--ui-border);
-    }
+    .headline p{margin:0; color:var(--muted); max-width:820px; margin-inline:auto}
 
-    /* ===== Sections ===== */
-    section{padding:48px 16px; border-bottom:1px solid var(--border)}
+    /* ===== Sections (unchanged) ===== */
+    section{padding:36px 16px; border-bottom:1px solid var(--border)}
     .container{max-width:1200px; margin:0 auto}
     .card{border:1px solid var(--fg); padding:18px; border-radius:4px; margin:16px 0}
     .muted{color:var(--muted)}
 
-    /* ===== Services with images ===== */
+    /* Services layout */
     .media{display:grid; gap:16px; align-items:start}
     .media--2col{grid-template-columns:1.2fr 1fr}
     .media--rev {grid-template-columns:1fr 1.2fr}
     .service-img{width:100%; height:auto; border:1px solid var(--border); border-radius:8px}
 
-    /* ===== Contact form uses UI colors (from ui_color) ===== */
+    /* Contact fields use UI colors */
     input,textarea,button{font:inherit}
     input,textarea{
       width:100%; padding:12px 14px; border-radius:8px; outline:none;
@@ -103,45 +90,54 @@
     }
 
     /* ===== Mobile ===== */
+    .hero-mobile{display:none; padding:8px 12px}
+    .hero-mobile img{
+      width:100%; height:140px; object-fit:cover;
+      border-radius:var(--hero-radius); border:1px solid var(--ui-border);
+    }
+
     @media (max-width:880px){
-      .header-grid{grid-template-columns:1fr}
-      .hero-in-header{display:none}          /* hide desktop hero on mobile */
-      .hero-in-header-mobile{display:block}  /* show mobile hero */
+      /* Hide desktop hero strip; keep header compact */
+      .hero-strip{display:none}
+      .hero-mobile{display:block}
     }
   </style>
 </head>
 <body id="top">
-  <!-- ===== Sticky header (desktop hero inside) ===== -->
+  <!-- ===== Header row: logo | hero strip | menu ===== -->
   <header class="site-header">
-    <div class="header-grid">
-      <div class="toprow">
-        <a class="brand" href="#home" aria-label="Home">
-          <img id="logo" src="/logo.svg" alt="Casual Design" />
-        </a>
-        <nav class="nav" id="site-nav">
-          <a href="#home"     data-key="nav_home">HOME</a>
-          <a href="#about"    data-key="nav_about">ABOUT</a>
-          <a href="#services" data-key="nav_services">SERVICES</a>
-          <a href="#contact"  data-key="nav_contact">CONTACT</a>
-        </nav>
-      </div>
+    <div class="header-row">
+      <a class="brand" href="#home" aria-label="Home">
+        <img id="logo" src="/logo.svg" alt="Casual Design">
+      </a>
 
-      <div class="header-copy">
-        <h1 data-key="hero_title">2D &amp; 3D Drafting</h1>
-        <p class="muted" data-key="hero_desc">Architecture &amp; interiors, tailored with a quiet logic…</p>
-      </div>
+      <!-- Desktop hero strip (same height as logo) -->
+      <img id="hero_img" class="hero-strip" src="" alt="" data-alt="hero_img_alt" loading="lazy" decoding="async" />
 
-      <!-- Desktop hero (hidden on mobile) -->
-      <div>
-        <img id="hero_img" class="hero-in-header" src="" alt="" data-alt="hero_img_alt" loading="lazy" decoding="async">
-      </div>
-
-      <!-- Mobile hero (only visible on mobile) -->
-      <div>
-        <img id="hero_img_mobile" class="hero-in-header-mobile" src="" alt="" data-alt="hero_mobile_alt" loading="lazy" decoding="async">
-      </div>
+      <nav class="nav" id="site-nav">
+        <a href="#home"     data-key="nav_home">HOME</a>
+        <a href="#about"    data-key="nav_about">ABOUT</a>
+        <a href="#services" data-key="nav_services">SERVICES</a>
+        <a href="#contact"  data-key="nav_contact">CONTACT</a>
+      </nav>
     </div>
   </header>
+
+  <!-- Mobile hero (visible only on mobile) -->
+  <div class="hero-mobile">
+    <img id="hero_img_mobile" src="" alt="" data-alt="hero_mobile_alt" loading="lazy" decoding="async" />
+  </div>
+
+  <!-- ===== Headline area ===== -->
+  <section class="headline" id="home">
+    <div class="wrap">
+      <h1 data-key="hero_title">2D &amp; 3D Drafting</h1>
+      <p class="muted" data-key="hero_desc">
+        Architecture &amp; interiors, tailored with a quiet logic. We blend modern clarity with classic
+        proportion to create spaces that breathe, work, and last.
+      </p>
+    </div>
+  </section>
 
   <!-- ===== About ===== -->
   <section id="about">
@@ -188,18 +184,18 @@
       <h2 data-key="contact_title">Contact</h2>
       <p><a href="mailto:info@casual-design.com" data-key="contact_email">info@casual-design.com</a></p>
 
-    <div class="card">
-      <label data-key="label_name">Your name</label>
-      <input type="text" name="name"><br><br>
+      <div class="card">
+        <label data-key="label_name">Your name</label>
+        <input type="text" name="name"><br><br>
 
-      <label data-key="label_email">Email</label>
-      <input type="email" name="email"><br><br>
+        <label data-key="label_email">Email</label>
+        <input type="email" name="email"><br><br>
 
-      <label data-key="label_msg">Message</label>
-      <textarea name="message" rows="8"></textarea><br><br>
+        <label data-key="label_msg">Message</label>
+        <textarea name="message" rows="8"></textarea><br><br>
 
-      <button type="button" data-key="btn_send">Send message</button>
-    </div>
+        <button type="button" data-key="btn_send">Send message</button>
+      </div>
     </div>
   </section>
 
@@ -208,7 +204,7 @@
     const $$ = s => document.querySelectorAll(s);
     function setVar(n,v){ document.documentElement.style.setProperty(n,v); }
 
-    // Choose black/white for contrast against a background color
+    // pick black/white for contrast against a color
     function pickContrast(color){
       const tmp = document.createElement('div');
       tmp.style.color = color; document.body.appendChild(tmp);
@@ -216,14 +212,14 @@
       const m = rgb.match(/(\d+)\D+(\d+)\D+(\d+)/);
       if(!m) return '#111111';
       const [r,g,b] = [m[1],m[2],m[3]].map(Number);
-      const srgb = [r,g,b].map(v=>v/255).map(v=>v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
-      const L = 0.2126*srgb[0] + 0.7152*srgb[1] + 0.0722*srgb[2];
-      return L > 0.58 ? '#111111' : '#ffffff';
+      const toLin = v=>{v/=255; return v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4);}
+      const L = 0.2126*toLin(r)+0.7152*toLin(g)+0.0722*toLin(b);
+      return L>0.58?'#111111':'#ffffff';
     }
 
     async function loadContent(){
       try{
-        const res = await fetch('/api/content?ts=' + Date.now());
+        const res = await fetch('/api/content?ts='+Date.now());
         const payload = await res.json();
         const data = payload.data || payload;
 
@@ -232,51 +228,51 @@
           const key = node.getAttribute('data-key');
           if (!(key in data)) return;
           if (node.tagName === 'A' && /email/i.test(key)){
-            node.textContent = data[key]; node.href = 'mailto:' + data[key];
-          } else if (node.tagName === 'IMG'){
-            if (data[key]) node.src = data[key];
-            const altKey = node.getAttribute('data-alt');
-            if (altKey && altKey in data) node.alt = String(data[altKey] || '');
+            node.textContent = data[key]; node.href = 'mailto:'+data[key];
           } else {
             node.textContent = data[key];
           }
         });
 
-        // Explicitly map image keys (in case not using data-key on some)
+        // Images from sheet
         if (data.logo_url) $('#logo').src = data.logo_url;
         if (data.hero_img_url) $('#hero_img').src = data.hero_img_url;
+        if (data.hero_img_alt) $('#hero_img').alt = data.hero_img_alt;
         if (data.hero_mobile_url) $('#hero_img_mobile').src = data.hero_mobile_url;
+        if (data.hero_mobile_alt) $('#hero_img_mobile').alt = data.hero_mobile_alt;
         if (data.svc1_img_url) $('#svc1_img').src = data.svc1_img_url;
+        if (data.svc1_img_alt) $('#svc1_img').alt = data.svc1_img_alt;
         if (data.svc2_img_url) $('#svc2_img').src = data.svc2_img_url;
+        if (data.svc2_img_alt) $('#svc2_img').alt = data.svc2_img_alt;
 
-        // Page theme
+        // Theme
         if (data.bg_color) setVar('--bg', String(data.bg_color));
-        if (String(data.theme_mode||'').toLowerCase() === 'inverted'){
-          setVar('--fg', '#f5f5f5'); setVar('--muted', '#bbbbbb'); setVar('--border', '#2a2a2a');
+        if (String(data.theme_mode||'').toLowerCase()==='inverted'){
+          setVar('--fg','#f5f5f5'); setVar('--muted','#bbb'); setVar('--border','#2a2a2a');
         } else {
-          setVar('--fg', '#111111'); setVar('--muted', '#666666'); setVar('--border', '#e9e6df');
+          setVar('--fg','#111'); setVar('--muted','#666'); setVar('--border','#e9e6df');
         }
 
-        // Row 56: ui_color → header + contact fields (any CSS color)
-        const ui = String(data.ui_color || '').trim().toLowerCase();
-        if (ui && ui !== 'auto'){
+        // Row 56 ui_color → header + contact fields (any CSS color)
+        const ui = String(data.ui_color||'').trim().toLowerCase();
+        if (ui && ui!=='auto'){
           const fg = pickContrast(ui);
           setVar('--ui-bg', ui);
           setVar('--ui-fg', fg);
-          setVar('--ui-border', (fg === '#ffffff') ? '#3a3a3a' : '#eaeaea');
-        } // else defaults stay white
+          setVar('--ui-border', (fg==='#ffffff') ? '#3a3a3a' : '#eaeaea');
+        }
 
-        // Active nav highlight on scroll
+        // Active nav on scroll
         const navLinks = [...document.querySelectorAll('.nav a')];
-        const targets  = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+        const targets = navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
         const obs = new IntersectionObserver(entries=>{
           const vis = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
           if(!vis) return;
-          navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${vis.target.id}`));
+          navLinks.forEach(l=>l.classList.toggle('active', l.getAttribute('href')===`#${vis.target.id}`));
         }, {rootMargin:"-40% 0px -55% 0px", threshold:[0,0.25,0.5,0.75,1]});
-        targets.forEach(el => obs.observe(el));
+        targets.forEach(el=>obs.observe(el));
 
-      }catch(e){ console.error('Failed to load content', e); }
+      }catch(e){ console.error('content load failed', e); }
     }
     loadContent();
   </script>
