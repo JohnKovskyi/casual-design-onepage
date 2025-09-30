@@ -42,7 +42,7 @@
 
     /* ===== Hamburger (mobile only) ===== */
     .menu-toggle{
-      display:none;               /* HIDDEN on desktop */
+      display:none;               /* shown via media query */
       grid-area:menu;
       width:28px;height:20px;
       padding:0;margin:0;
@@ -97,7 +97,7 @@
     @media (max-width:880px){
       /* Swap: hamburger LEFT, logo RIGHT; hide desktop hero; show mobile hero */
       .header-row{grid-template-columns:auto 1fr;grid-template-areas:"menu brand";}
-      .menu-toggle{display:flex}  /* SHOW hamburger on mobile */
+      .menu-toggle{display:flex}
       .brand{justify-self:end}
       .hero-strip{display:none}
 
@@ -319,3 +319,6 @@
       }catch(err){ console.error('content load failed', err); }
     }
     loadContent();
+  </script>
+</body>
+</html>
