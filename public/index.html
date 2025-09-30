@@ -42,12 +42,12 @@
 
     /* ===== Hamburger (mobile only) ===== */
     .menu-toggle{
-      display:none;               /* shown via media query */
+      display:none;               /* HIDDEN on desktop */
       grid-area:menu;
       width:28px;height:20px;
       padding:0;margin:0;
       background:none;border:none;cursor:pointer;
-      display:flex;flex-direction:column;justify-content:space-between;
+      flex-direction:column;justify-content:space-between;
     }
     .menu-toggle .bar{
       width:100%;height:3px;background:var(--ui-fg);border-radius:2px;
@@ -97,7 +97,7 @@
     @media (max-width:880px){
       /* Swap: hamburger LEFT, logo RIGHT; hide desktop hero; show mobile hero */
       .header-row{grid-template-columns:auto 1fr;grid-template-areas:"menu brand";}
-      .menu-toggle{display:flex}
+      .menu-toggle{display:flex}  /* SHOW hamburger on mobile */
       .brand{justify-self:end}
       .hero-strip{display:none}
 
@@ -319,6 +319,3 @@
       }catch(err){ console.error('content load failed', err); }
     }
     loadContent();
-  </script>
-</body>
-</html>
