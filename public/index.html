@@ -45,6 +45,10 @@
     .menu-toggle{
       display:none;grid-area:menu;align-items:center;justify-content:center;
       width:44px;height:44px;border:none;background:transparent;cursor:pointer;
+
+      /* Prevent any default icon/text (iOS/Android) */
+      -webkit-appearance:none;appearance:none;font-size:0;line-height:0;
+      padding:0;margin:0;
     }
     .menu-toggle:focus{outline:2px solid #999;outline-offset:2px}
     .menu-toggle .bar{
@@ -113,7 +117,9 @@
     <div class="header-row">
       <!-- Hamburger (mobile only) -->
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
-        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        <span class="bar" aria-hidden="true"></span>
+        <span class="bar" aria-hidden="true"></span>
+        <span class="bar" aria-hidden="true"></span>
       </button>
 
       <!-- Brand / Logo -->
@@ -236,7 +242,7 @@
       return L>0.58?'#111111':'#ffffff';
     }
 
-    // Mobile menu toggle
+    // Mobile menu toggle (keeps hamburger bars; no text anywhere)
     const toggle = $('#menuToggle');
     const mobileMenu = $('#mobileMenu');
     toggle.addEventListener('click', ()=>{
